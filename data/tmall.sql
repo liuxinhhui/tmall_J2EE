@@ -1,5 +1,5 @@
 ﻿# Host: 127.0.0.1  (Version: 5.5.15)
-# Date: 2018-08-16 16:19:58
+# Date: 2018-08-16 16:43:27
 # Generator: MySQL-Front 5.3  (Build 4.269)
 
 /*!40101 SET NAMES utf8 */;
@@ -29,7 +29,7 @@ CREATE TABLE `product` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
   `subTitle` varchar(255) DEFAULT NULL,
-  `orignalPrice` float DEFAULT NULL,
+  `originalPrice` float DEFAULT NULL,
   `promotePrice` float DEFAULT NULL,
   `stock` int(11) DEFAULT NULL,
   `createDate` datetime DEFAULT NULL,

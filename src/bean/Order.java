@@ -18,7 +18,8 @@ public class Order {
     private Date payDate;
     private Date deliveryDate;
     private Date confirmDate;
-	
+    private String status;
+    
 	private User user;
 
 	public int getId() {
@@ -107,6 +108,14 @@ public class Order {
 
 	public void setConfirmDate(Date confirmDate) {
 		this.confirmDate = confirmDate;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	public User getUser() {

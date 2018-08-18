@@ -6,15 +6,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 
-import bean.Category;
 import bean.Product;
 import bean.Property;
 import bean.PropertyValue;
 import util.DBUtil;
-import util.DateUtil;
 
 /*
  *  Ù–‘÷µDAO
@@ -149,7 +146,7 @@ public class PropertyValueDAO {
 
 		try (Connection conn = DBUtil.getConnection(); Statement s = conn.createStatement()) {
 
-			String sql = "select count(*) from product";
+			String sql = "select count(*) from propertyValue";
 			ResultSet rs = s.executeQuery(sql);
 
 			if (rs.next()) {

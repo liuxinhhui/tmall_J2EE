@@ -5,7 +5,7 @@ import java.util.Date;
 /*
  * 评价实体类 
  */
-public class review {
+public class Review {
 	private int id;
 	private String content;
 	private Date createDate;

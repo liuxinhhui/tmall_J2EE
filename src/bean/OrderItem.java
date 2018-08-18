@@ -5,7 +5,7 @@ package bean;
  */
 public class OrderItem {
 	private int id;
-	private int num;	//购买数量
+	private int number;	//购买数量
 	
 	private Product product;
 	private User user;
@@ -17,11 +17,11 @@ public class OrderItem {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public int getNum() {
-		return num;
+	public int getNumber() {
+		return number;
 	}
-	public void setNum(int num) {
-		this.num = num;
+	public void setNumber(int number) {
+		this.number = number;
 	}
 	public Product getProduct() {
 		return product;

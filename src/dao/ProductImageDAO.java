@@ -6,14 +6,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 
-import bean.Category;
 import bean.Product;
 import bean.ProductImage;
 import util.DBUtil;
-import util.DateUtil;
 
 /*
  * ²úÆ·Í¼Æ¬DAO
@@ -113,7 +110,6 @@ public class ProductImageDAO {
 				Product product = categoryDAO.get(rs.getInt("pid"));
 				
 				ProductImage bean = new ProductImage();
-				bean = new ProductImage();
 				bean.setId(rs.getInt("id"));
 				bean.setType(rs.getString("type"));
 				bean.setProduct(product);
@@ -140,7 +136,7 @@ public class ProductImageDAO {
 
 		try (Connection conn = DBUtil.getConnection(); Statement s = conn.createStatement()) {
 
-			String sql = "select count(*) from product";
+			String sql = "select count(*) from productImage";
 			ResultSet rs = s.executeQuery(sql);
 
 			if (rs.next()) {

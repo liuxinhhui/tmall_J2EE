@@ -1,4 +1,2 @@
-/util/
-/dao/
-/bean/
-/service/
+/filter/
+/servlet/

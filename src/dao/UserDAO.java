@@ -94,7 +94,8 @@ public class UserDAO {
 	// ·¶Î§²éÕÒstart<=id<=end
 	public ArrayList<User> list(int start, int end) {
 		ArrayList<User> beans = new ArrayList<>();
-		String sql = "select * from user where id>=? and id<=?";
+//		String sql = "select * from user where id>=? and id<=?";
+		String sql = "select * from user order by id desc limit ?,?";
 		try (Connection conn = DBUtil.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
 			ps.setInt(1, start);

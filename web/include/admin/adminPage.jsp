@@ -3,7 +3,7 @@
 
 <script>
 	$(function(){
-// 		这表示去掉点击效果，即点击之后不会跳转到其他页面
+// 		这表示去掉class="disabled"的点击效果，即点击之后不会跳转到其他页面
 	    $("ul.pagination li.disabled a").click(function(){
 	        return false;
 	    });

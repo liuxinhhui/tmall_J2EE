@@ -93,7 +93,8 @@ public class CategoryDAO {
 	// ·¶Î§²éÕÒstart<=id<=end
 	public ArrayList<Category> list(int start, int end) {
 		ArrayList<Category> beans = new ArrayList<>();
-		String sql = "select * from category where id>=? and id<=?";
+//		String sql = "select * from category where id>=? and id<=?";
+		String sql = "select * from category order by id desc limit ?,?";
 		try (Connection conn = DBUtil.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
 			ps.setInt(1, start);

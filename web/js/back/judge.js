@@ -38,6 +38,7 @@ function checkInt(id, name){
 	return true;
 }
  
+//点击删除时，进行询问，在对应按钮上添加自定义属性deleteLink="true"就可以了
  $(function(){
 	$("a").click(function(){
 		var deleteLink = $(this).attr("deleteLink");

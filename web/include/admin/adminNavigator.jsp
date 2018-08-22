@@ -13,7 +13,7 @@
 <body>
 
 <div class="navigatorDiv">
-	<nav class="navbar navbar-default navbar-fixed-top">
+	<nav class="navbar navbar-default navbar-fixed-top navbar-inverse">
 		<img src="img/site/tmallbuy.png" class="logo">
 		<a class="navbar-brand" href="#nowhere">天猫后台</a>
 		<a class="navbar-brand" href="admin_category_list">分类管理</a>

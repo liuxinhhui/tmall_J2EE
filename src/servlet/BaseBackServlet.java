@@ -1,13 +1,22 @@
 package servlet;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import util.Page;
 
@@ -57,5 +66,35 @@ public class BaseBackServlet extends HttpServlet{
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/*
+	 * 把表单上传的数据 一般数据保存到params参数中，file数据通过InputStream形式返回 只适用于一个file
+	 */
+	public InputStream parseUpload(HttpServletRequest request, Map<String, String> params) {
+		InputStream is =null;
+		try {
+            DiskFileItemFactory factory = new DiskFileItemFactory();
+            ServletFileUpload upload = new ServletFileUpload(factory);
+            // 最大上传10M
+            factory.setSizeThreshold(1024 * 10240);
+             
+            List items = upload.parseRequest(request);
+            Iterator iter = items.iterator();
+            while (iter.hasNext()) {
+                FileItem item = (FileItem) iter.next();
+                if (!item.isFormField()) {
+                    is = item.getInputStream();
+                } else {
+                	String paramName = item.getFieldName();
+                	String paramValue = item.getString();
+                	paramValue = new String(paramValue.getBytes("ISO-8859-1"), "UTF-8");
+                	params.put(paramName, paramValue);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+		return is;
 	}
 }

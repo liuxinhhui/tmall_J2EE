@@ -116,7 +116,8 @@ public class ProductDAO {
 	// 范围查找start<=id<=end
 	public ArrayList<Product> list(int start, int end) {
 		ArrayList<Product> beans = new ArrayList<>();
-		String sql = "select * from product where id>=? and id<=?";
+//		String sql = "select * from product where id>=? and id<=?";
+		String sql = "select * from product order by id desc limit ?,?";
 		try (Connection conn = DBUtil.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
 			ps.setInt(1, start);
@@ -222,4 +223,44 @@ public class ProductDAO {
 //		总数
 		System.out.println(dao.getTotal());
 	}
+	
+	//以下不是常规的 CRUD了 应该写在service中
+	
+	//查找某个分类下的产品
+	public ArrayList<Product> list(int cid, int start, int end) {
+		ArrayList<Product> beans = new ArrayList<>();
+//		String sql = "select * from product where id>=? and id<=?";
+		String sql = "select * from product where cid = ? order by id desc limit ?,?";
+		try (Connection conn = DBUtil.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+			ps.setInt(1, cid);
+			ps.setInt(2, start);
+			ps.setInt(3, end);
+			ResultSet rs = ps.executeQuery();
+
+			while (rs.next()) {
+				CategoryDAO categoryDAO = new CategoryDAO();
+				Category category = categoryDAO.get(rs.getInt("cid"));
+				
+				Product bean = new Product();
+				bean.setId(rs.getInt("id"));
+				bean.setName(rs.getString("name"));
+				bean.setSubTitle(rs.getString("subTitle"));
+				bean.setOriginalPrice(rs.getFloat("originalPrice"));
+				bean.setPromotePrice(rs.getFloat("promotePrice"));
+				bean.setStock(rs.getInt("stock"));
+				bean.setCreateDate(DateUtil.t2d(rs.getTimestamp("createDate")));
+				bean.setCategory(category);
+				
+				beans.add(bean);
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return beans;
+	}
+	
 }

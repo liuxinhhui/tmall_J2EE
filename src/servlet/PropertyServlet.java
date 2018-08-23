@@ -20,9 +20,9 @@ public class PropertyServlet extends BaseBackServlet{
 		
 		Category c = categoryDAO.get(cid);
 		ArrayList<Property> ps =  propertyDAO.list(cid, page.getStart(),page.getCount());
-		int total = propertyDAO.getTotal();
+		int total = propertyDAO.getTotal(cid);
 		page.setTotal(total);
-		page.setParam("?cid="+cid);
+		page.setParam("&cid="+cid);
 		
 		request.setAttribute("c", c);
 		request.setAttribute("page", page);

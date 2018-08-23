@@ -1,6 +1,9 @@
 package bean;
 
 import java.util.Date;
+import java.util.List;
+
+import dao.OrderDAO;
 
 /*
  * 订单实体类 
@@ -21,6 +24,39 @@ public class Order {
     private String status;
     
 	private User user;
+	
+	//下面这三个是为了订单管理新添加进来的 需要orderItemDAO 来填充他们
+	private List<OrderItem> orderItems;
+    private float total;
+    private int totalNumber;
+    
+    //返回订单状态对应的中文
+    public String getStatusDesc(){
+        String desc ="未知";
+        switch(status){
+            case OrderDAO.waitPay:
+                desc="待付款";
+                break;
+            case OrderDAO.waitDelivery:
+                desc="待发货";
+                break;
+            case OrderDAO.waitConfirm:
+                desc="待收货";
+                break;
+            case OrderDAO.waitReview:
+                desc="等评价";
+                break;
+            case OrderDAO.finish:
+                desc="完成";
+                break;
+            case OrderDAO.delete:
+                desc="刪除";
+                break;
+            default:
+                desc="未知";
+        }
+        return desc;
+    }
 
 	public int getId() {
 		return id;
@@ -124,6 +160,30 @@ public class Order {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public List<OrderItem> getOrderItems() {
+		return orderItems;
+	}
+
+	public void setOrderItems(List<OrderItem> orderItems) {
+		this.orderItems = orderItems;
+	}
+
+	public float getTotal() {
+		return total;
+	}
+
+	public void setTotal(float total) {
+		this.total = total;
+	}
+
+	public int getTotalNumber() {
+		return totalNumber;
+	}
+
+	public void setTotalNumber(int totalNumber) {
+		this.totalNumber = totalNumber;
 	}
 	
 }

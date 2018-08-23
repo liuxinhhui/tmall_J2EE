@@ -24,7 +24,7 @@ public class ProductServlet extends BaseBackServlet{
 		int cid = Integer.parseInt(request.getParameter("cid"));
 		
 		ArrayList<Product> ps  = productDAO.list(cid, page.getStart(), page.getCount());
-		int total = productDAO.getTotal();
+		int total = productDAO.getTotal(cid);
 		Category c = categoryDAO.get(cid);
 		
 		page.setParam("&cid="+cid);	//这里是为点击分页的时候传参

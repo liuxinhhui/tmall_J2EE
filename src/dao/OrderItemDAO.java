@@ -113,7 +113,7 @@ public class OrderItemDAO {
 	// 范围查找start<=id<=end
 	public ArrayList<OrderItem> list(int start, int end) {
 		ArrayList<OrderItem> beans = new ArrayList<>();
-		String sql = "select * from orderItem where id>=? and id<=?";
+		String sql = "select * from orderItem order by id desc limit ?,?";
 		try (Connection conn = DBUtil.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
 			ps.setInt(1, start);
@@ -158,7 +158,7 @@ public class OrderItemDAO {
 
 		try (Connection conn = DBUtil.getConnection(); Statement s = conn.createStatement()) {
 
-			String sql = "select count(*) from order_";
+			String sql = "select count(*) from orderItem";
 			ResultSet rs = s.executeQuery(sql);
 
 			if (rs.next()) {
@@ -181,11 +181,11 @@ public class OrderItemDAO {
 
 //		增加
 		User u = udao.get(1);
-		Order o = odao.get(1);
-		Product p = pdao.get(1);
+		Order o = odao.get(2);
+		Product p = pdao.get(10);
 		
 		OrderItem bean = new OrderItem();
-		bean.setNumber(2);
+		bean.setNumber(3);
 		bean.setUser(u);
 		bean.setOrder(o);
 		bean.setProduct(p);
@@ -211,9 +211,74 @@ public class OrderItemDAO {
 //		dao.update(bean);
 
 //		删除
-		dao.delete(bean.getId());
+//		dao.delete(bean.getId());
 
 //		总数
-		System.out.println(dao.getTotal());
+//		System.out.println(dao.getTotal());
 	}
+	
+	//非CRUD
+	
+	//查询一个订单的订单项
+	public ArrayList<OrderItem> listByOrder(int oid, int start, int end) {
+		ArrayList<OrderItem> beans = new ArrayList<>();
+		String sql = "select * from orderItem where oid = ? order by id desc limit ?,?";
+		try (Connection conn = DBUtil.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+			ps.setInt(1, oid);
+			ps.setInt(2, start);
+			ps.setInt(3, end);
+			ResultSet rs = ps.executeQuery();
+
+			while (rs.next()) {
+				UserDAO userDAO = new UserDAO();
+				User user = userDAO.get(rs.getInt("uid"));
+				ProductDAO productDAO = new ProductDAO();
+				Product product = productDAO.get(rs.getInt("pid"));
+				OrderDAO orderDAO = new OrderDAO();
+				Order order = orderDAO.get(rs.getInt("oid"));
+				
+				OrderItem bean = new OrderItem();
+				bean.setId(rs.getInt("id"));
+				bean.setNumber(rs.getInt("number"));
+				bean.setProduct(product);
+				bean.setOrder(order);
+				bean.setUser(user);
+				bean.setUser(user);
+				
+				beans.add(bean);
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return beans;
+	}
+	
+	public ArrayList<OrderItem> listByOrder(int oid) {
+		return listByOrder(oid, 0, Short.MAX_VALUE);
+	}
+	
+	//填充订单数据
+	public void fill(Order o) {
+        ArrayList<OrderItem> ois=listByOrder(o.getId());
+        float total = 0;
+        int totalNumber = 0;
+        for (OrderItem oi : ois) {
+             total+=oi.getNumber()*oi.getProduct().getPromotePrice();
+             totalNumber+=oi.getNumber();
+        }
+        o.setTotal(total);	//设置总金额
+        o.setOrderItems(ois);	//设置所有订单项
+        o.setTotalNumber(totalNumber); //设置总数量
+    }
+	
+	public void fill(ArrayList<Order> os) {
+        for (Order o : os) {
+        	fill(o);
+        }
+    }
+	
 }

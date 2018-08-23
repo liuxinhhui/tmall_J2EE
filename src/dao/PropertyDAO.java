@@ -220,4 +220,25 @@ public class PropertyDAO {
 	public ArrayList<Property> list(int cid){
 		return list(cid,0,Short.MAX_VALUE);
 	}
+	
+	// 查找一个分类下的属性数量
+	public int getTotal(int cid) {
+		int total = 0;
+
+		try (Connection conn = DBUtil.getConnection(); Statement s = conn.createStatement()) {
+
+			String sql = "select count(*) from property where cid=" + cid;
+			ResultSet rs = s.executeQuery(sql);
+
+			if (rs.next()) {
+				total = rs.getInt(1);
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return total;
+	}
 }

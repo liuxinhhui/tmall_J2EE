@@ -17,18 +17,41 @@ public class Page {
 
 	// 总页数
 	public int getTotalPage(){
-		if(total % count == 0)
-			return total / count;
-		else
-			return total / count + 1;
+//		if(total % count == 0)
+//			return total / count;
+//		else
+//			return total / count + 1;
+		
+		int totalPage;
+        // 假设总数是50，是能够被5整除的，那么就有10页
+        if (0 == total % count)
+            totalPage = total /count;
+        // 假设总数是51，不能够被5整除的，那么就有11页
+        else
+            totalPage = total / count + 1;
+        
+        if(0==totalPage)		//当total = 0时 用1 之前写的没有考虑到0的情况
+            totalPage = 1;
+        return totalPage;
 	}
 	
 	// 最后一页的start
 	public int getLast(){
-		if(total % count == 0)
-			return total - count;
-		else
-			return total - (total%count);
+//		if(total % count == 0)
+//			return total - count;
+//		else
+//			return total - (total%count);
+		
+		int last;
+        // 假设总数是50，是能够被5整除的，那么最后一页的开始就是45
+        if (0 == total % count)
+            last = total - count;
+        // 假设总数是51，不能够被5整除的，那么最后一页的开始就是50
+        else
+            last = total - total % count;
+        
+        last = last<0?0:last;
+        return last;
 	}
 	
 	// 是否有前一页

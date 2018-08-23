@@ -18,6 +18,13 @@ import util.DateUtil;
  * 订单DAO
  */
 public class OrderDAO {
+	public static final String waitPay = "waitPay";
+	public static final String waitDelivery = "waitDelivery";
+	public static final String waitConfirm = "waitConfirm";
+	public static final String waitReview = "waitReview";
+	public static final String finish = "finish";
+	public static final String delete = "delete";
+	
 	/*
 	 * 插入时，bean里面没有id值。只有插入数据库之后，数据库自动生成之后，再获取id值赋值到bean上
 	 */
@@ -131,7 +138,8 @@ public class OrderDAO {
 	// 范围查找start<=id<=end
 	public ArrayList<Order> list(int start, int end) {
 		ArrayList<Order> beans = new ArrayList<>();
-		String sql = "select * from order_ where id>=? and id<=?";
+//		String sql = "select * from order_ where id>=? and id<=?";
+		String sql = "select * from order_ order by id desc limit ?,?";
 		try (Connection conn = DBUtil.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
 			ps.setInt(1, start);
@@ -209,7 +217,7 @@ public class OrderDAO {
 		bean.setMobile("18888888888");
 		bean.setUserMessage("请尽快送达");
 		bean.setCreateDate(new Date());
-		bean.setStatus("待付款");
+		bean.setStatus("waitDelivery");
 		bean.setUser(u);
 		dao.add(bean);
 
@@ -247,9 +255,9 @@ public class OrderDAO {
 //		dao.update(bean);
 
 //		删除
-		dao.delete(bean.getId());
+//		dao.delete(bean.getId());
 
 //		总数
-		System.out.println(dao.getTotal());
+//		System.out.println(dao.getTotal());
 	}
 }

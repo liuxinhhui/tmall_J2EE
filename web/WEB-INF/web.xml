@@ -64,4 +64,13 @@
 		<servlet-name>ProductImageServlet</servlet-name>
 		<url-pattern>/productImageServlet</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>OrderServlet</servlet-name>
+		<servlet-class>servlet.OrderServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>OrderServlet</servlet-name>
+		<url-pattern>/orderServlet</url-pattern>
+	</servlet-mapping>
 </web-app>

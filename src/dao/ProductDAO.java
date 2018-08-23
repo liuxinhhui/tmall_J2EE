@@ -263,4 +263,24 @@ public class ProductDAO {
 		return beans;
 	}
 	
+	// 某一分类下的产品数量
+	public int getTotal(int cid) {
+		int total = 0;
+
+		try (Connection conn = DBUtil.getConnection(); Statement s = conn.createStatement()) {
+
+			String sql = "select count(*) from product where cid=" + cid;
+			ResultSet rs = s.executeQuery(sql);
+
+			if (rs.next()) {
+				total = rs.getInt(1);
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return total;
+	}
 }

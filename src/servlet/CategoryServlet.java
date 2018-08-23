@@ -43,7 +43,7 @@ public class CategoryServlet extends BaseBackServlet {
 	    c.setName(name);
 	    categoryDAO.add(c);
 	    
-	    File  imageFolder= new File(request.getSession().getServletContext().getRealPath("img/category"));
+	    File imageFolder= new File(request.getSession().getServletContext().getRealPath("img/category"));
 	    File file = new File(imageFolder,c.getId()+".jpg");
 	    
 	    try {
@@ -69,8 +69,11 @@ public class CategoryServlet extends BaseBackServlet {
 	
 	public String delete(HttpServletRequest request, HttpServletResponse response, Page page){
 		int id = Integer.parseInt(request.getParameter("id"));
-
 		categoryDAO.delete(id);
+		
+		File imageFolder= new File(request.getSession().getServletContext().getRealPath("img/category"));
+		File file = new File(imageFolder,id+".jpg");
+		file.delete();
 		
 		return "@admin_category_list";
 	}
@@ -96,7 +99,7 @@ public class CategoryServlet extends BaseBackServlet {
 		c.setName(name);
 		categoryDAO.update(c);
 		
-		File  imageFolder= new File(request.getSession().getServletContext().getRealPath("img/category"));
+		File imageFolder= new File(request.getSession().getServletContext().getRealPath("img/category"));
 		File file = new File(imageFolder,c.getId()+".jpg");
 		
 		try {

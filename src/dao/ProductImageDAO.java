@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import bean.Product;
 import bean.ProductImage;
@@ -16,6 +17,9 @@ import util.DBUtil;
  * 产品图片DAO
  */
 public class ProductImageDAO {
+	public static final String type_single = "type_single";
+	public static final String type_detail = "type_detail";
+	
 	/*
 	 * 插入时，bean里面没有id值。只有插入数据库之后，数据库自动生成之后，再获取id值赋值到bean上
 	 */
@@ -182,5 +186,37 @@ public class ProductImageDAO {
 
 //		总数
 		System.out.println(dao.getTotal());
+	}
+	
+	//非CRUD
+	
+	//查询某个产品用于在产品信息里做展示的图片 或者 在详情页里的图片
+	public List<ProductImage> list(Product p, String type){
+		ArrayList<ProductImage> beans = new ArrayList<>();
+		String sql = "select * from productImage where pid = ? and type = ?";
+		try (Connection conn = DBUtil.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+			ps.setInt(1, p.getId());
+			ps.setString(2, type);
+			ResultSet rs = ps.executeQuery();
+
+			while (rs.next()) {
+				ProductDAO categoryDAO = new ProductDAO();
+				Product product = categoryDAO.get(rs.getInt("pid"));
+				
+				ProductImage bean = new ProductImage();
+				bean.setId(rs.getInt("id"));
+				bean.setType(rs.getString("type"));
+				bean.setProduct(product);
+				
+				beans.add(bean);
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return beans;
 	}
 }

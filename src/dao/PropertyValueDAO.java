@@ -163,29 +163,29 @@ public class PropertyValueDAO {
 
 	public static void main(String[] args) {
 		PropertyValueDAO dao = new PropertyValueDAO();
-		ProductDAO pdao = new ProductDAO();
-		PropertyDAO ptdao = new PropertyDAO();
+//		ProductDAO pdao = new ProductDAO();
+//		PropertyDAO ptdao = new PropertyDAO();
 		
 
 //		增加
-		Product p = pdao.get(1);
-		Property pt = ptdao.get(1);
-		
-		PropertyValue bean = new PropertyValue();
-		bean.setValue("2米");
-		bean.setProduct(p);
-		bean.setProperty(pt);
-		dao.add(bean);
+//		Product p = pdao.get(1);
+//		Property pt = ptdao.get(1);
+//		
+//		PropertyValue bean = new PropertyValue();
+//		bean.setValue("2米");
+//		bean.setProduct(p);
+//		bean.setProperty(pt);
+//		dao.add(bean);
 
 //		查询
-		ArrayList<PropertyValue> beans = dao.list();
-		Iterator<PropertyValue> itr = beans.iterator();
-		while (itr.hasNext()) {
-			PropertyValue i = itr.next();
-			System.out.println(i.getValue());
-			System.out.println(i.getProduct().getId());
-			System.out.println(i.getProperty().getId());
-		}
+//		ArrayList<PropertyValue> beans = dao.list();
+//		Iterator<PropertyValue> itr = beans.iterator();
+//		while (itr.hasNext()) {
+//			PropertyValue i = itr.next();
+//			System.out.println(i.getValue());
+//			System.out.println(i.getProduct().getId());
+//			System.out.println(i.getProperty().getId());
+//		}
 
 //		修改
 //		PropertyValue bean = dao.get(1);
@@ -195,9 +195,90 @@ public class PropertyValueDAO {
 //		dao.update(bean);
 
 //		删除
-		dao.delete(bean.getId());
+//		dao.delete(bean.getId());
 
 //		总数
-		System.out.println(dao.getTotal());
+//		System.out.println(dao.getTotal());
+		
+		ArrayList<PropertyValue> beans = dao.list(5);
+		Iterator<PropertyValue> itr = beans.iterator();
+		while (itr.hasNext()) {
+			PropertyValue i = itr.next();
+			System.out.println(i.getValue());
+			System.out.println(i.getProduct().getId());
+			System.out.println(i.getProperty().getId());
+		}
 	}
+	
+	//非CRUD方法
+	
+	//根据产品id和属性id查找唯一属性值
+	public PropertyValue get(int ptid, int pid) {
+        PropertyValue bean = null;
+        try (Connection c = DBUtil.getConnection(); Statement s = c.createStatement();) {
+            String sql = "select * from PropertyValue where ptid = " + ptid + " and pid = " + pid;
+            ResultSet rs = s.executeQuery(sql);
+            if (rs.next()) {
+                bean= new PropertyValue();
+                int id = rs.getInt("id");
+ 
+                String value = rs.getString("value");
+                 
+                Product product = new ProductDAO().get(pid);
+                Property property = new PropertyDAO().get(ptid);
+                bean.setProduct(product);
+                bean.setProperty(property);
+                bean.setValue(value);
+                bean.setId(id);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return bean;
+    }
+	
+	//初始化一个产品的属性值 保证其所在分类的每一个属性都有一个对应的属性值
+	public void init(Product p) {
+        ArrayList<Property> pts= new PropertyDAO().list(p.getCategory().getId());
+         
+        for (Property pt: pts) {
+            PropertyValue pv = get(pt.getId(),p.getId());
+            if(null==pv){
+                pv = new PropertyValue();
+                pv.setProduct(p);
+                pv.setProperty(pt);
+                this.add(pv);
+            }
+        }
+    }
+	
+	//查找一个产品的 所有属性值
+	public ArrayList<PropertyValue> list(int pid) {
+		ArrayList<PropertyValue> beans = new ArrayList<PropertyValue>();
+         
+        String sql = "select * from PropertyValue where pid = ? order by ptid desc";
+        try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql);) {
+            ps.setInt(1, pid);
+  
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                PropertyValue bean = new PropertyValue();
+                int id = rs.getInt(1);
+ 
+                int ptid = rs.getInt("ptid");
+                String value = rs.getString("value");
+                 
+                Product product = new ProductDAO().get(pid);
+                Property property = new PropertyDAO().get(ptid);
+                bean.setProduct(product);
+                bean.setProperty(property);
+                bean.setValue(value);
+                bean.setId(id);          
+                beans.add(bean);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return beans;
+    }
 }

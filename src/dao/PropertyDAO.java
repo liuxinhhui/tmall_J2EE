@@ -153,17 +153,17 @@ public class PropertyDAO {
 
 	public static void main(String[] args) {
 		PropertyDAO dao = new PropertyDAO();
-		CategoryDAO cdao = new CategoryDAO();
+//		CategoryDAO cdao = new CategoryDAO();
 
 //		增加
-		Category c = cdao.get(2);
-		Property bean = new Property();
-		bean.setName("面料");
-		bean.setCategory(c);
-		dao.add(bean);
+//		Category c = cdao.get(2);
+//		Property bean = new Property();
+//		bean.setName("面料");
+//		bean.setCategory(c);
+//		dao.add(bean);
 
 //		查询
-		ArrayList<Property> beans = dao.list();
+		ArrayList<Property> beans = dao.list(10);
 		Iterator<Property> itr = beans.iterator();
 		while (itr.hasNext()) {
 			Property i = itr.next();
@@ -182,7 +182,7 @@ public class PropertyDAO {
 //		dao.delete(bean.getId());
 
 //		总数
-		System.out.println(dao.getTotal());
+//		System.out.println(dao.getTotal());
 	}
 	
 	//以下不是常规的 CRUD了 应该写在service中
@@ -215,5 +215,9 @@ public class PropertyDAO {
 		}
 
 		return beans;
+	}
+	//某个分类下所有的属性
+	public ArrayList<Property> list(int cid){
+		return list(cid,0,Short.MAX_VALUE);
 	}
 }

@@ -2,19 +2,23 @@ package servlet;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import bean.Category;
 import bean.Product;
+import bean.PropertyValue;
 import dao.CategoryDAO;
 import dao.ProductDAO;
+import dao.PropertyValueDAO;
 import util.Page;
 
 public class ProductServlet extends BaseBackServlet{
 	CategoryDAO categoryDAO = new CategoryDAO();
 	ProductDAO productDAO = new ProductDAO();
+	PropertyValueDAO propertyValueDAO = new PropertyValueDAO();
 	
 	public String list(HttpServletRequest request, HttpServletResponse response, Page page){
 		int cid = Integer.parseInt(request.getParameter("cid"));
@@ -97,4 +101,30 @@ public class ProductServlet extends BaseBackServlet{
 		
 		return "@admin_product_list?cid=" +cid;
 	}
+	
+	//设置产品属性
+	public String editPropertyValue(HttpServletRequest request, HttpServletResponse response, Page page) {
+        int id = Integer.parseInt(request.getParameter("id"));
+        
+        Product p = productDAO.get(id);
+        propertyValueDAO.init(p);
+        List<PropertyValue> pvs = propertyValueDAO.list(p.getId());
+         
+        request.setAttribute("p", p);
+        request.setAttribute("pvs", pvs);
+         
+        return "admin/editPropertyValue.jsp";       
+    }
+ 
+    public String updatePropertyValue(HttpServletRequest request, HttpServletResponse response, Page page) {
+        int pvid = Integer.parseInt(request.getParameter("pvid"));
+        String value = request.getParameter("value");
+         
+        PropertyValue pv =propertyValueDAO.get(pvid);
+        pv.setValue(value);
+        propertyValueDAO.update(pv);
+        
+        return "%success";
+    }
+     
 }

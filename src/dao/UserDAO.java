@@ -175,4 +175,36 @@ public class UserDAO {
 //		总数
 		System.out.println(dao.getTotal());
 	}
+	
+	//非CRUD
+	
+	//判断用户名是否可用
+	public boolean isExist(String name) {
+        User user = get(name);
+        return user!=null;
+    }
+	
+	public User get(String name) {
+        User bean = null;
+          
+        String sql = "select * from User where name = ?";
+        try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setString(1, name);
+            ResultSet rs =ps.executeQuery();
+  
+            if (rs.next()) {
+                bean = new User();
+                int id = rs.getInt("id");
+                bean.setName(name);
+                String password = rs.getString("password");
+                bean.setPassword(password);
+                bean.setId(id);
+            }
+  
+        } catch (SQLException e) {
+  
+            e.printStackTrace();
+        }
+        return bean;
+    }
 }

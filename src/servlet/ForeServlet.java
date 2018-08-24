@@ -5,7 +5,10 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.web.util.HtmlUtils;
+
 import bean.Category;
+import bean.User;
 import dao.CategoryDAO;
 import dao.OrderDAO;
 import dao.OrderItemDAO;
@@ -43,10 +46,22 @@ public class ForeServlet extends BaseBackServlet{
     
     //注册
     public String register(HttpServletRequest request, HttpServletResponse response, Page page) {
-    	List<Category> cs= categoryDAO.list();
-        
-        request.setAttribute("cs", cs);
-    	
-    	return "fore/registerPage.jsp";
+    	String name = request.getParameter("name");
+        String password = request.getParameter("password");
+        name = HtmlUtils.htmlEscape(name);
+        System.out.println(name);
+        boolean exist = userDAO.isExist(name);
+         
+        if(exist){
+            request.setAttribute("msg", "用户名已经被使用,不能使用");
+            return "fore/registerPage.jsp"; 
+        }
+         
+        User user = new User();
+        user.setName(name);
+        user.setPassword(password);
+        userDAO.add(user);
+         
+        return "@fore/registerSuccessPage.jsp"; 
     }
 }

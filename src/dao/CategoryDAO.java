@@ -146,9 +146,9 @@ public class CategoryDAO {
 		CategoryDAO dao = new CategoryDAO();
 
 //		增加
-		Category bean = new Category();
-		bean.setName("平衡车");
-		dao.add(bean);
+//		Category bean = new Category();
+//		bean.setName("平衡车");
+//		dao.add(bean);
 
 //		查询
 //		Category bean = dao.get(1);

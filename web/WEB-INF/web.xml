@@ -2,6 +2,13 @@
 
 <web-app>
 	
+	<jsp-config>
+		<jsp-property-group>
+			<url-pattern>*.html</url-pattern>
+			<page-encoding>UTF-8</page-encoding>
+		</jsp-property-group>
+	</jsp-config>
+	
 	<filter>
 		<filter-name>EncodingFilter</filter-name>
 		<filter-class>filter.EncodingFilter</filter-class>
@@ -17,6 +24,15 @@
 	</filter>
 	<filter-mapping>
 		<filter-name>BackServletFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<filter>
+		<filter-name>ForeServletFilter</filter-name>
+		<filter-class>filter.ForeServletFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>ForeServletFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 	
@@ -72,5 +88,15 @@
 	<servlet-mapping>
 		<servlet-name>OrderServlet</servlet-name>
 		<url-pattern>/orderServlet</url-pattern>
+	</servlet-mapping>
+	
+	
+	<servlet>
+		<servlet-name>ForeServlet</servlet-name>
+		<servlet-class>servlet.ForeServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ForeServlet</servlet-name>
+		<url-pattern>/foreServlet</url-pattern>
 	</servlet-mapping>
 </web-app>

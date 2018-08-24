@@ -8,9 +8,11 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 import bean.Category;
 import bean.Product;
+import bean.ProductImage;
 import util.DBUtil;
 import util.DateUtil;
 
@@ -263,6 +265,10 @@ public class ProductDAO {
 		return beans;
 	}
 	
+	public ArrayList<Product> list(int cid) {
+		return list(cid, 0, Short.MAX_VALUE);
+	}
+	
 	// 某一分类下的产品数量
 	public int getTotal(int cid) {
 		int total = 0;
@@ -283,4 +289,42 @@ public class ProductDAO {
 
 		return total;
 	}
+	
+	// 填充某一个分类的所有产品
+	public void fill(Category c){
+		List<Product> ps = this.list(c.getId());
+		for (Product p : ps) {
+			this.setFirstProductImage(p);
+		}
+		c.setProducts(ps);
+	}
+	
+	public void fill(List<Category> cs){
+		for (Category c : cs) {
+			fill(c);
+		}
+	}
+	
+	//把一维产品变成二维的 方便显示
+	public void fillByRow(List<Category> cs){
+		int productNumberEachRow = 8;
+        for (Category c : cs) {
+        	List<Product> products =  c.getProducts();
+            List<List<Product>> productsByRow =  new ArrayList<>();
+            for (int i = 0; i < products.size(); i+=productNumberEachRow) {
+                int size = i+productNumberEachRow;
+                size= size>products.size()?products.size():size;
+                List<Product> productsOfEachRow =products.subList(i, size);
+                productsByRow.add(productsOfEachRow);
+            }
+            c.setProductsByRow(productsByRow);
+        }
+	}
+	
+	//设置产品的主图片
+	public void setFirstProductImage(Product p) {
+        List<ProductImage> pis= new ProductImageDAO().list(p, ProductImageDAO.type_single);
+        if(!pis.isEmpty())
+            p.setFirstProductImage(pis.get(0));    
+    }
 }

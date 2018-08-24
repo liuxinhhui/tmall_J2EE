@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>首页的分类产品列表 每种分类一行 展示五个推荐商品</title>
+</head>
+
+<style>
+
+/* 	分类产品列表居中 最宽为1013px */
+	div.homepageCategoryProducts{
+		max-width: 1013px;
+		margin: 10px auto;
+		background-color: #f5f5f5;
+		padding:50px 10px;
+	}
+/* 	每个分类的标题栏 */
+	div.eachHomepageCategoryProducts span.left-mark{
+		display: inline-block;
+		width: 5px;
+		height: 20px;
+		background-color: #19c8a9;
+		
+ 		vertical-align:top;	/*垂直居顶 */
+	}
+	
+	div.eachHomepageCategoryProducts span.categoryTitle{
+		margin-left: 30px;
+		font-size:16px;
+		font-weight: bold;
+		color:#646464;
+	}
+/* 	每个分类的商品列表 的整体 */
+	div.eachHomepageCategoryProducts{
+		margin-bottom:40px;
+	}
+	div.eachHomepageCategoryProducts a.productItem{
+		float: left;
+		width: 189px;
+		height: 285px;
+		
+		cursor:pointer;
+
+		border:1px solid white;
+		background-color:white;
+		margin:8px 4px;
+	}
+/* 	每个分类的商品列表 细节 */
+	div.eachHomepageCategoryProducts a.productItem img{
+		width: 187px;
+		height: 190px;
+	}
+	div.eachHomepageCategoryProducts a.productItem img:hover{
+		opacity:0.7;
+		filter:alpha(opacity = 70); /*火狐浏览器下的变亮*/
+	}
+	div.eachHomepageCategoryProducts a.productItem span.productItemDesc{
+		box-sizing:border-box;
+		display:block;
+		height:66px;
+		font-size: 12px;
+		color:#666666;
+		padding:16px;
+	}
+	div.eachHomepageCategoryProducts a.productItem span.productPrice{
+		display: block;
+		font-size: 16px;
+		color:#ff003a;
+		padding-left:16px;
+		margin-top:-10px;
+	}
+	
+/* 	结束图片 居中 */
+	img.endpng{
+		display: block;
+		width:82px;
+		margin:0 auto;
+	}
+</style>
+
+<body>
+	<div class="homepageCategoryProducts">
+		<c:forEach items="${cs}" var="c" varStatus="st">
+			<div class="eachHomepageCategoryProducts">
+				<span class="left-mark"></span>
+				<span class="categoryTitle">${c.name}</span>
+				<br>
+				<c:forEach items="${c.products}" var="p" varStatus="st">
+					<c:if test="${st.count>=1 and st.count<=5}">
+						<a class="productItem" href="foreproduct?pid=${p.id}">
+							<img alt="" src="img/productSingle_middle/${p.firstProductImage.id}.jpg">
+							<span class="productItemDesc">[热销]${fn:substring(p.name, 0, 20)}</span>
+							<span class="productPrice"><fmt:formatNumber type="number" value="${p.promotePrice}" minFractionDigits="2"/></span>
+						</a>
+					</c:if>
+				</c:forEach>
+				<div style="clear: both"></div>
+			</div>
+		</c:forEach>
+	
+		<img class="endpng" alt="结束图片加载失败" src="img/site/end.png">
+	</div><!-- homepageCategoryProducts -->
+</body>
+</html>

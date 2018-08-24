@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+</head>
+
+<style>
+	body{
+		font-size:12px;
+		font-family:Arial;
+	}
+	a{
+		color:#999;
+	}
+	a:hover{
+		color:#c40000;
+		text-decoration: none;
+	}
+	
+/* 	左侧天猫图标 绝对定位 */
+	img.simpleLogo{
+		position:absolute;
+		top:50px;
+		left:10px;
+		width:140px;
+	}
+	
+/* 	右侧搜索框 右浮*/
+	div.simpleSearchDiv{
+		float:right;
+		background-color:#c40000;
+		width:300px;
+		height:40px;
+		padding:1px;
+		margin:10px 20px 40px;
+	}
+/* 	这里左浮主要是取消天然的左右方向上的4个像素间隔 */
+	div.simpleSearchDiv input{
+		width:225px;
+		height:38px;
+		outline:none;
+		float:left;
+	}
+	div.simpleSearchDiv button{
+		background-color:#c40000;
+		width:73px;
+		height:38px;
+		border:1px solid transparent;
+		color:white;
+		font-size:14px;
+		outline:none;
+		float:left;
+	}
+/* 	下方的四个超链 */
+	div.searchBelow{
+		margin-top: 3px;
+    	margin-left: -20px;
+	}
+	div.searchBelow span{
+		color:#999;
+	}
+	div.searchBelow a{
+		padding: 0px 20px;
+    	font-size: 14px;
+	}
+</style>
+
+<body>
+	<div>
+		<a href="#nowhere">
+			<img src="../img/site/simpleLogo.png" class="simpleLogo">
+		</a>
+		
+		<div class="simpleSearchDiv">
+			<input type="text" placeholder="平衡车 原汁机" name="keyword">
+			<button type="submit" class="searchButton">搜天猫</button>
+		
+			<div class="searchBelow">
+				<c:forEach items="${cs}" var="c" varStatus="st">
+	                <c:if test="${st.count>=8 and st.count<=11}">
+	                    <span>
+	                        <a href="forecategory?cid=${c.id}">${c.name}</a>
+	                        <c:if test="${st.count!=11}"><span>|</span></c:if>
+	                    </span>          
+	                </c:if>
+	            </c:forEach>
+			</div>
+		</div>
+	</div>
+	
+	<div style="clear:both"></div>
+</body>
+</html>

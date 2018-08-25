@@ -8,6 +8,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.util.HtmlUtils;
 
 import bean.Category;
+import bean.Product;
+import bean.ProductImage;
+import bean.PropertyValue;
+import bean.Review;
 import bean.User;
 import dao.CategoryDAO;
 import dao.OrderDAO;
@@ -85,5 +89,31 @@ public class ForeServlet extends BaseBackServlet{
     public String logout(HttpServletRequest request, HttpServletResponse response, Page page) {
     	request.getSession().removeAttribute("user");
         return "@forehome";
+    }
+    
+    //产品页
+    public String product(HttpServletRequest request, HttpServletResponse response, Page page) {
+    	int pid = Integer.parseInt(request.getParameter("pid"));
+    	
+    	//产品实体 包括展示图片和基本信息
+    	Product p = productDAO.get(pid);
+    	productDAO.setFirstProductImage(p);
+    	productDAO.setSaleAndReviewNumber(p);
+    	List<ProductImage> productSingleImages = productImageDAO.list(p, ProductImageDAO.type_single);
+    	List<ProductImage> productDetailImages = productImageDAO.list(p, ProductImageDAO.type_detail);
+    	p.setProductSingleImages(productSingleImages);
+    	p.setProductDetailImages(productDetailImages);
+    	
+    	//产品属性实体
+    	List<PropertyValue> pvs = propertyValueDAO.list(p.getId());
+    	
+    	//产品评价实体
+    	List<Review> reviews = reviewDAO.list(p.getId());
+        
+    	request.setAttribute("p", p);
+    	request.setAttribute("pvs", pvs);
+    	request.setAttribute("reviews", reviews);
+    	
+    	return "fore/productPage.jsp?pid=" + pid;
     }
 }

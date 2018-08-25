@@ -1,6 +1,7 @@
 package bean;
 
 import java.util.Date;
+import java.util.List;
 
 /*
  * 产品实体类 
@@ -18,6 +19,12 @@ public class Product {
     
     //接下来是产品的图片
     private ProductImage firstProductImage;	//用于代表产品的图片 就取第一张图片就行
+    private List<ProductImage> productSingleImages;	//左上角展示的图片
+    private List<ProductImage> productDetailImages;	//下方详情展示的图片
+    
+    //评价和销量
+    private int reviewCount;
+    private int saleCount;
     
 	public int getId() {
 		return id;
@@ -90,5 +97,38 @@ public class Product {
 	public void setFirstProductImage(ProductImage firstProductImage) {
 		this.firstProductImage = firstProductImage;
 	}
+
+	public List<ProductImage> getProductSingleImages() {
+		return productSingleImages;
+	}
+
+	public void setProductSingleImages(List<ProductImage> productSingleImages) {
+		this.productSingleImages = productSingleImages;
+	}
+
+	public List<ProductImage> getProductDetailImages() {
+		return productDetailImages;
+	}
+
+	public void setProductDetailImages(List<ProductImage> productDetailImages) {
+		this.productDetailImages = productDetailImages;
+	}
+
+	public int getReviewCount() {
+		return reviewCount;
+	}
+
+	public void setReviewCount(int reviewCount) {
+		this.reviewCount = reviewCount;
+	}
+
+	public int getSaleCount() {
+		return saleCount;
+	}
+
+	public void setSaleCount(int saleCount) {
+		this.saleCount = saleCount;
+	}
+	
 	
 }

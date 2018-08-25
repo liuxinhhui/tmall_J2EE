@@ -281,4 +281,22 @@ public class OrderItemDAO {
         }
     }
 	
+	//获取某一个产品的销量
+	public int getSaleCount(int pid) {
+        int total = 0;
+           try (Connection c = DBUtil.getConnection(); Statement s = c.createStatement();) {
+     
+               String sql = "select sum(number) from OrderItem where pid = " + pid;
+     
+               ResultSet rs = s.executeQuery(sql);
+               while (rs.next()) {
+                   total = rs.getInt(1);
+               }
+           } catch (SQLException e) {
+     
+               e.printStackTrace();
+           }
+           return total;
+   }
+	
 }

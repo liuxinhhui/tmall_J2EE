@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>产品详情 累计评价</title>
+</head>
+
+<script>
+	$(function(){
+// 		加载完成后就隐藏评价div
+	    $("div.productReviewDiv").hide();
+	    
+	    $("a.productDetailTopReviewLink").click(function(){
+	        $("div.productReviewDiv").show();
+	        $("div.productDetailDiv").hide();
+	    });
+	    $("a.productReviewTopPartSelectedLink").click(function(){
+	        $("div.productReviewDiv").hide();
+	        $("div.productDetailDiv").show();      
+	    });
+	})
+</script>
+
+<style>
+	body{
+	    font-size: 12px;
+	    font-family: Arial;
+	}
+	a:hover{
+	    text-decoration:none;
+	    color: #C40000;
+	}
+/* 	详情div居中 */
+	div.productDetailDiv{
+	    width: 790px;
+	    margin: 40px auto;
+	}
+/* 	详情顶部栏 */
+	div.productDetailTopPart{
+	    border: 1px solid #DFDFDF;
+	    border-left-width: 0px;
+	}
+	a.selected{/*被选中的元素*/
+		border-left: 1px solid #cfbfb1;
+		border-right: 1px solid #cfbfb1;
+		
+		display: inline-block;
+		width: 90px;
+		
+		color: #b10000;
+		font-weight: bold;
+		line-height: 46px;
+		text-align: center;
+		
+		position: relative;
+	}
+	a.selected:before{/*使用:before为超链上方加一个天猫色的横条*/
+		content:"";
+		
+		border-width: 1px;
+		border-color: #b00000;
+		border-style: solid;
+		
+		display: block;
+		width: 90px;
+		height: 0;
+
+		position: absolute;
+		top: -1px;
+		margin-left: -1px;
+	}
+	a.selected:after{/*使用:after 为超链上方加一个天猫色的美人尖*/
+		content: "";
+
+		border-color: #b00000 transparent transparent;
+		border-style: solid;
+		border-width: 5px;
+
+		width: 0;
+		height: 0;
+		
+		position: absolute;
+		top: -1px;
+		left: 50%;
+		margin-left: -5px;
+	}
+	a.productDetailTopReviewLink{
+		padding: 0px 20px;
+		border-right: 1px dotted #D2D2D2;
+		color: #333333;
+	}
+	span.productDetailTopReviewLinkNumber{
+	color: #3355B9;
+	}
+/* 	详细参数 */
+	div.productParamterPart{
+	    border: 1px solid #DFDFDF;
+	    padding: 40px;
+	}
+	div.productParamter{
+	    color: #999999;
+	    font-weight: bold;
+	    margin-bottom: 20px;
+	}
+	div.productParamterList span{
+	    display: block;
+	    width: 220px;
+	    float: left;
+	    padding: 8px 0px;
+	    color: #666666;
+	}
+/* 	图片 */
+	div.productDetailImagesPart img{
+	    display: block;
+	    width: 790px;
+	    margin:20px 0px;
+	}
+	
+/* 	下面是评价的样式 */
+/* 	评价div居中 */
+	div.productReviewDiv{
+	    width: 790px;
+	    margin: 40px auto;
+	}
+/* 	评价顶部栏 */
+	div.productReviewTopPart{
+	    border: 1px solid #DFDFDF;
+	}
+	a.productReviewTopPartSelectedLink{
+	    padding: 0px 20px;
+	    color: #333333;
+	}
+/* 	下面的评价 */
+	div.productReviewContentPart{
+	    padding-top: 50px;
+	}
+	div.productReviewItem{
+	    border-bottom: 1px solid #E3E3E3;
+	    margin: 10px 0px;
+	}
+	div.productReviewItem div.productReviewItemDesc{
+	    width: 80%;
+	    display: inline-block;
+	    color: #333333;
+	    margin: 5px 20px;
+	    float: left;
+	}
+	div.productReviewItemDate{
+	    margin: 15px 0px 0px 0px;
+	    color: #CCCCCC;
+	}
+	div.productReviewItem div.productReviewItemUserInfo{
+	    color: #404040;
+	    margin: 5px 20px;
+	    padding: 20px 0;
+	}
+	span.userInfoGrayPart{
+	    color: #999999;
+	}
+</style>
+
+<body>
+	<div class="productDetailDiv">
+		<div class="productDetailTopPart">
+	        <a class="productDetailTopPartSelectedLink selected" href="#nowhere">商品详情</a>
+	        <a class="productDetailTopReviewLink" href="#nowhere">累计评价<span class="productDetailTopReviewLinkNumber">${p.reviewCount}</span></a>
+	    </div>
+	    
+	    <div class="productParamterPart">
+        	<div class="productParamter">产品参数：</div>
+	        <div class="productParamterList">
+	        		<c:forEach items="${pvs}" var="pv">
+	        			<span>${pv.property.name}:  ${fn:substring(pv.value, 0, 10)}</span>
+	        		</c:forEach>
+	        </div>
+	        <div style="clear:both"></div>
+	    </div>
+	    
+	    <div class="productDetailImagesPart">
+	    	<c:forEach items="${p.productDetailImages}" var="pi">
+	    		<img src="../img/productDetail/${pi.id}.jpg">
+	    	</c:forEach>
+    	</div>
+	</div><!-- productDetailDiv -->
+
+	<div class="productReviewDiv">
+		<div class="productReviewTopPart">
+	        <a class="productReviewTopPartSelectedLink" href="#nowhere">商品详情</a>
+	        <a class="selected" href="#nowhere">累计评价 <span class="productReviewTopReviewLinkNumber">19</span></a>
+	    </div>
+	    
+	    <div class="productReviewContentPart">
+	    	<c:forEach items="${reviews}" var="review">
+	    		<div class="productReviewItem">
+		            <div class="productReviewItemDesc">
+		                <div class="productReviewItemContent">${review.content}</div>
+		                <div class="productReviewItemDate">${review.createDate}</div>
+		            </div>
+		            <div class="productReviewItemUserInfo">${review.name}
+		            	<span class="userInfoGrayPart">（匿名）</span>
+		            </div>
+		            <div style="clear:both"></div>
+		        </div>
+	    	</c:forEach>
+	    </div>
+	</div><!-- productReviewDiv -->
+</body>
+</html>

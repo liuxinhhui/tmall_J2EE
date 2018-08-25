@@ -207,4 +207,59 @@ public class ReviewDAO {
 //		总数
 		System.out.println(dao.getTotal());
 	}
+	
+	//非CRUD
+	
+	//获取一个产品的评价数量
+	public int getCount(int pid) {
+        String sql = "select count(*) from Review where pid = ? ";
+  
+        try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql);) {
+  
+            ps.setInt(1, pid);
+            ResultSet rs = ps.executeQuery();
+  
+            while (rs.next()) {
+               return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+  
+            e.printStackTrace();
+        }
+        return 0;      
+    }
+	
+	//获取一个产品的所有评价
+	public ArrayList<Review> list(int pid) {
+		ArrayList<Review> beans = new ArrayList<>();
+//		String sql = "select * from review where id>=? and id<=?";
+		String sql = "select * from review where pid = ? order by desc";
+		try (Connection conn = DBUtil.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+			ps.setInt(1, pid);
+			ResultSet rs = ps.executeQuery();
+
+			while (rs.next()) {
+				UserDAO userDAO = new UserDAO();
+				User user = userDAO.get(rs.getInt("uid"));
+				ProductDAO categoryDAO = new ProductDAO();
+				Product product = categoryDAO.get(rs.getInt("pid"));
+				
+				Review bean = new Review();
+				bean.setId(rs.getInt("id"));
+				bean.setContent(rs.getString("content"));
+				bean.setCreateDate(DateUtil.t2d(rs.getTimestamp("createDate")));
+				bean.setUser(user);
+				bean.setProduct(product);
+				
+				beans.add(bean);
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return beans;
+	}
 }

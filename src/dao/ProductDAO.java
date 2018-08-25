@@ -105,6 +105,7 @@ public class ProductDAO {
 				bean.setStock(rs.getInt("stock"));
 				bean.setCreateDate(DateUtil.t2d(rs.getTimestamp("createDate")));
 				bean.setCategory(category);
+				
 			}
 
 		} catch (SQLException e) {
@@ -326,5 +327,21 @@ public class ProductDAO {
         List<ProductImage> pis= new ProductImageDAO().list(p, ProductImageDAO.type_single);
         if(!pis.isEmpty())
             p.setFirstProductImage(pis.get(0));    
+    }
+	
+	//设置产品的销量和评价
+	public void setSaleAndReviewNumber(Product p) {
+        int saleCount = new OrderItemDAO().getSaleCount(p.getId());
+        p.setSaleCount(saleCount);         
+ 
+        int reviewCount = new ReviewDAO().getCount(p.getId());
+        p.setReviewCount(reviewCount);
+         
+    }
+ 
+    public void setSaleAndReviewNumber(List<Product> products) {
+        for (Product p : products) {
+            setSaleAndReviewNumber(p);
+        }
     }
 }

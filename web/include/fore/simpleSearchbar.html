@@ -67,25 +67,27 @@
 
 <body>
 	<div>
-		<a href="#nowhere">
+		<a href="#${contextPath}">
 			<img src="../img/site/simpleLogo.png" class="simpleLogo">
 		</a>
 		
-		<div class="simpleSearchDiv">
-			<input type="text" placeholder="平衡车 原汁机" name="keyword">
-			<button type="submit" class="searchButton">搜天猫</button>
-		
-			<div class="searchBelow">
-				<c:forEach items="${cs}" var="c" varStatus="st">
-	                <c:if test="${st.count>=8 and st.count<=11}">
-	                    <span>
-	                        <a href="forecategory?cid=${c.id}">${c.name}</a>
-	                        <c:if test="${st.count!=11}"><span>|</span></c:if>
-	                    </span>          
-	                </c:if>
-	            </c:forEach>
+		<form action="foresearch" method="post" >
+			<div class="simpleSearchDiv">
+				<input type="text" placeholder="平衡车 原汁机" name="keyword" value="${param.keyword}">
+				<button type="submit" class="searchButton">搜天猫</button>
+			
+				<div class="searchBelow">
+					<c:forEach items="${cs}" var="c" varStatus="st">
+		                <c:if test="${st.count>=8 and st.count<=11}">
+		                    <span>
+		                        <a href="forecategory?cid=${c.id}">${c.name}</a>
+		                        <c:if test="${st.count!=11}"><span>|</span></c:if>
+		                    </span>          
+		                </c:if>
+		            </c:forEach>
+				</div>
 			</div>
-		</div>
+		</form>
 	</div>
 	
 	<div style="clear:both"></div>

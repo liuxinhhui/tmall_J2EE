@@ -24,7 +24,7 @@
 		})
 		
 // 		点击修改购买数量 直接输入购买数量
-		var stock = 66;
+		var stock = ${p.stock};
 	    $(".productNumberSetting").keyup(function(){
 	        var num= $(".productNumberSetting").val();
 	        num = parseInt(num);
@@ -50,6 +50,67 @@
 	            num=1;
 	        $(".productNumberSetting").val(num);
 	    });
+	    
+	    
+	    //检查是否登陆 没有就弹出模态登陆窗口
+	    $(".buyLink").click(function(){
+	        var page = "forecheckLogin";
+	        $.get(
+	                page,
+	                function(result){
+	                    if("success"==result){
+	                 		
+	                    }
+	                    else{
+	                        $("#loginModal").modal('show');                    
+	                    }
+	                }
+	        );     
+	        return false;
+	    });
+	    
+	    $(".addCartLink").click(function(){
+	        var page = "forecheckLogin";
+	        $.get(
+	                page,
+	                function(result){
+	                    if("success"==result){
+							
+	                    }
+	                    else{
+	                        $("#loginModal").modal('show');                    
+	                    }
+	                }
+	        );     
+	        return false;
+	    });
+	    
+	    //模态登陆窗口的提交
+	    $("button.loginSubmitButton").click(function(){
+	    	var name = $("#name").val();
+	    	var password = $("#password").val();
+	    	if(0==name.length||0==password.length){
+	    		$("span.errorMessage").html("请输入账号密码");
+	    		$("div.loginErrorMessageDiv").show();			
+	    		return false;
+	    	}
+	    	var page = "foreloginAjax";
+	    	$.get(
+	                page,
+	                {"name":name,"password":password},
+	                function(result){
+	                	if("success"==result){
+	                		location.reload();
+	                	}
+	                	else{
+	                		$("span.errorMessage").html("账号密码错误");
+	                		$("div.loginErrorMessageDiv").show();	            		
+	                	}
+	                }
+	    	);			
+	    	return true;
+	    });
+	    
 	})
 </script>
 
@@ -352,7 +413,7 @@
 	        </div>
        		
        		<div class="buyDiv">
-	            <a href="#nowhere" class="buyLink"><button class="buyButton">立即购买</button></a>
+	            <a href="forebuyone?pid=${p.id}" class="buyLink"><button class="buyButton">立即购买</button></a>
 	            <a class="addCartLink" href="#nowhere"><button class="addCartButton"><span class="glyphicon glyphicon-shopping-cart"></span>加入购物车</button></a>
 	        </div>
        

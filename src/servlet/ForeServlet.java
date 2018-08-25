@@ -1,5 +1,6 @@
 package servlet;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +14,11 @@ import bean.ProductImage;
 import bean.PropertyValue;
 import bean.Review;
 import bean.User;
+import comparator.ProductAllComparator;
+import comparator.ProductDateComparator;
+import comparator.ProductPriceComparator;
+import comparator.ProductReviewComparator;
+import comparator.ProductSaleCountComparator;
 import dao.CategoryDAO;
 import dao.OrderDAO;
 import dao.OrderItemDAO;
@@ -116,4 +122,75 @@ public class ForeServlet extends BaseBackServlet{
     	
     	return "fore/productPage.jsp?pid=" + pid;
     }
+    
+    //分类页
+    public String category(HttpServletRequest request, HttpServletResponse response, Page page) {
+    	int cid = Integer.parseInt(request.getParameter("cid"));
+    	
+    	Category c = new CategoryDAO().get(cid);
+        new ProductDAO().fill(c);
+        new ProductDAO().setSaleAndReviewNumber(c.getProducts());      
+         
+        String sort = request.getParameter("sort");
+        if(null!=sort){
+            switch(sort){
+                case "review":
+                    Collections.sort(c.getProducts(),new ProductReviewComparator());
+                    break;
+                case "date" :
+                    Collections.sort(c.getProducts(),new ProductDateComparator());
+                    break;
+                     
+                case "saleCount" :
+                    Collections.sort(c.getProducts(),new ProductSaleCountComparator());
+                    break;
+                     
+                case "price":
+                    Collections.sort(c.getProducts(),new ProductPriceComparator());
+                    break;
+                     
+                case "all":
+                    Collections.sort(c.getProducts(),new ProductAllComparator());
+                    break;
+            }
+        }
+        
+        request.setAttribute("c", c);
+    	
+    	return "fore/categoryPage.jsp";
+    }
+    
+    //分类页
+    public String search(HttpServletRequest request, HttpServletResponse response, Page page) {
+    	String keyword = request.getParameter("keyword");
+    	
+        List<Product> ps= new ProductDAO().search(keyword,0,20);
+        productDAO.setSaleAndReviewNumber(ps);
+        
+        request.setAttribute("ps",ps);
+    	
+    	return "fore/searchResultPage.jsp";
+    }
+    
+    //检查是否登陆
+    public String checkLogin(HttpServletRequest request, HttpServletResponse response, Page page) {
+        User user =(User) request.getSession().getAttribute("user");
+        if(null!=user)
+            return "%success";
+        return "%fail";
+    }
+    
+    //模态登陆
+    public String loginAjax(HttpServletRequest request, HttpServletResponse response, Page page) {
+    	String name = request.getParameter("name");
+        String password = request.getParameter("password");    
+        User user = userDAO.get(name,password);
+         
+        if(null==user){
+            return "%fail";
+        }
+        request.getSession().setAttribute("user", user);
+        return "%success"; 
+    }
+    
 }

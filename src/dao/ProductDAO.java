@@ -344,4 +344,51 @@ public class ProductDAO {
             setSaleAndReviewNumber(p);
         }
     }
+    
+    //¹Ø¼ü×Ö²éÑ¯
+    public List<Product> search(String keyword, int start, int count) {
+	    List<Product> beans = new ArrayList<Product>();
+	    
+	    if(null==keyword||0==keyword.trim().length())
+	        return beans;
+	       String sql = "select * from Product where name like ? limit ?,? ";
+	 
+	       try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql);) {
+	           ps.setString(1, "%"+keyword.trim()+"%");
+	           ps.setInt(2, start);
+	           ps.setInt(3, count);
+	 
+	           ResultSet rs = ps.executeQuery();
+	 
+	           while (rs.next()) {
+	               Product bean = new Product();
+	               int id = rs.getInt(1);
+	               int cid = rs.getInt("cid");
+	               String name = rs.getString("name");
+	               String subTitle = rs.getString("subTitle");
+	               float orignalPrice = rs.getFloat("originalPrice");
+	               float promotePrice = rs.getFloat("promotePrice");
+	               int stock = rs.getInt("stock");
+	               Date createDate = DateUtil.t2d( rs.getTimestamp("createDate"));
+	
+	               bean.setName(name);
+	               bean.setSubTitle(subTitle);
+	               bean.setOriginalPrice(orignalPrice);
+	               bean.setPromotePrice(promotePrice);
+	               bean.setStock(stock);
+	               bean.setCreateDate(createDate);
+	               bean.setId(id);
+	
+	               Category category = new CategoryDAO().get(cid);
+	               bean.setCategory(category);
+	               setFirstProductImage(bean);               
+	               beans.add(bean);
+	           }
+	       } catch (SQLException e) {
+	 
+	           e.printStackTrace();
+	       }
+	       
+	       return beans;
+	}
 }

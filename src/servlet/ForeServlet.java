@@ -49,7 +49,6 @@ public class ForeServlet extends BaseBackServlet{
     	String name = request.getParameter("name");
         String password = request.getParameter("password");
         name = HtmlUtils.htmlEscape(name);
-        System.out.println(name);
         boolean exist = userDAO.isExist(name);
          
         if(exist){
@@ -63,5 +62,28 @@ public class ForeServlet extends BaseBackServlet{
         userDAO.add(user);
          
         return "@fore/registerSuccessPage.jsp"; 
+    }
+    
+    //登陆
+    public String login(HttpServletRequest request, HttpServletResponse response, Page page) {
+    	String name = request.getParameter("name");
+    	String password = request.getParameter("password");
+        name = HtmlUtils.htmlEscape(name);
+        
+        User user = userDAO.get(name, password);
+        
+        if(null == user){
+        	request.setAttribute("msg", "账号密码错误");
+            return "fore/loginPage.jsp";
+        }
+        
+        request.getSession().setAttribute("user", user);
+        return "@forehome";	//这里不能用服务端跳转 服务端跳转的话 只能直接跳转到某个页面，因为不会再进行一边过滤和BaseForeServlet了
+    }
+    
+    //退出
+    public String logout(HttpServletRequest request, HttpServletResponse response, Page page) {
+    	request.getSession().removeAttribute("user");
+        return "@forehome";
     }
 }

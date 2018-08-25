@@ -40,8 +40,16 @@
 		</a>
 		
 		<span>喵，欢迎来天猫</span>
-		<a href="#nowhere">请登录</a>
-		<a href="/fore/registerPage.jsp">免费注册</a>
+		
+		<c:if test="${!empty user}">
+			<a href="#nowhere">${user.name}</a>
+			<a href="/forelogout">退出</a>
+		</c:if>
+		
+		<c:if test="${empty user}">
+			<a href="/fore/loginPage.jsp">请登录</a>
+			<a href="/fore/registerPage.jsp">免费注册</a>
+		</c:if>
 		
 		<span class="pull-right">
 			<a href="#nowhere">我的订单</a>

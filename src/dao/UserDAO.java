@@ -207,4 +207,31 @@ public class UserDAO {
         }
         return bean;
     }
+	
+	//≤È—Ø√˚◊÷√‹¬Î
+	public User get(String name, String password) {
+        User bean = null;
+          
+        String sql = "select * from User where name = ? and password = ?";
+        try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setString(1, name);
+            ps.setString(2, password);
+            ResultSet rs =ps.executeQuery();
+  
+            if (rs.next()) {
+                bean = new User();
+                int id = rs.getInt("id");
+                bean.setName(name);
+                String pwd = rs.getString("password");
+                bean.setPassword(password);
+                bean.setId(id);
+            }
+  
+        } catch (SQLException e) {
+  
+            e.printStackTrace();
+        }
+        return bean;
+    }
+	
 }

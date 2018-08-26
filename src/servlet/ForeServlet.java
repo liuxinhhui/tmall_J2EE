@@ -1,5 +1,6 @@
 package servlet;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -195,7 +196,7 @@ public class ForeServlet extends BaseBackServlet{
         return "%success"; 
     }
     
-    //立即购买 直接操作数据库中的 订单项 这时的订单项都是订单id=-1 这是订单项还没有生成订单的标志
+    //立即购买 第一步 直接操作数据库中的 订单项 这时的订单项都是订单id=-1 这是订单项还没有生成订单的标志
     public String buyone(HttpServletRequest request, HttpServletResponse response, Page page) {
     	int pid = Integer.parseInt(request.getParameter("pid"));
         int num = Integer.parseInt(request.getParameter("num"));
@@ -224,6 +225,103 @@ public class ForeServlet extends BaseBackServlet{
             oiid = oi.getId();
         }
         	
-    	return "@fore/settleAccountPage.jsp?oiid=" + oiid;
+    	return "@forebuy?oiid=" + oiid;
     }
+    
+    //根据订单项列表 显示结算页面
+    public String buy(HttpServletRequest request, HttpServletResponse response, Page page) {
+    	String[] oiids=request.getParameterValues("oiid");
+    	
+    	List<OrderItem> ois = new ArrayList<>();
+        float total = 0;
+     
+        for (String strid : oiids) {
+            int oiid = Integer.parseInt(strid);
+            OrderItem oi= orderItemDAO.get(oiid);
+            productDAO.setFirstProductImage(oi.getProduct());
+            total +=oi.getProduct().getPromotePrice()*oi.getNumber();
+            ois.add(oi);
+        }
+         
+        request.getSession().setAttribute("ois", ois);
+        request.setAttribute("total", total);
+        
+        return "fore/settleAccountPage.jsp";
+    }
+    
+    
+    //加入购物车
+    public String addCart(HttpServletRequest request, HttpServletResponse response, Page page) {
+        int pid = Integer.parseInt(request.getParameter("pid"));
+        int num = Integer.parseInt(request.getParameter("num"));
+        User user =(User) request.getSession().getAttribute("user");
+
+        Product p = productDAO.get(pid);
+        boolean found = false;
+        List<OrderItem> ois = orderItemDAO.listByUser(user.getId());
+        for (OrderItem oi : ois) {
+            if(oi.getProduct().getId()==p.getId()){
+                oi.setNumber(oi.getNumber()+num);
+                orderItemDAO.update(oi);
+                found = true;
+                break;
+            }
+        }      
+        if(!found){
+            OrderItem oi = new OrderItem();
+            oi.setUser(user);
+            oi.setNumber(num);
+            oi.setProduct(p);
+            orderItemDAO.add(oi);
+        }
+        return "%success";
+    }
+    
+    //我的订单
+    public String cart(HttpServletRequest request, HttpServletResponse response, Page page) {
+        User user =(User) request.getSession().getAttribute("user");
+        
+        List<OrderItem> ois = orderItemDAO.listByUser(user.getId());
+        for (OrderItem oi : ois) {
+			productDAO.setFirstProductImage(oi.getProduct());
+		}
+        
+        request.setAttribute("ois", ois);
+        
+        return "fore/shoppingcartPage.jsp";
+    }
+    
+    //在购物修改订单项
+    public String changeOrderItem(HttpServletRequest request, HttpServletResponse response, Page page) {
+    	User user =(User) request.getSession().getAttribute("user");
+    	if(null==user)
+			return "%fail";
+    	
+    	int pid = Integer.parseInt(request.getParameter("pid"));
+    	int number = Integer.parseInt(request.getParameter("number"));
+    	
+    	List<OrderItem> ois = orderItemDAO.listByUser(user.getId());
+    	for (OrderItem oi : ois) {
+			if(oi.getProduct().getId()==pid){
+				oi.setNumber(number);
+				orderItemDAO.update(oi);
+				break;
+			}
+			
+		}
+    	
+    	return "%success";
+    }
+    
+    //在购物车删除订单项
+    public String deleteOrderItem(HttpServletRequest request, HttpServletResponse response, Page page){
+		User user =(User) request.getSession().getAttribute("user");
+		if(null==user)
+			return "%fail";
+		
+		int oiid = Integer.parseInt(request.getParameter("oiid"));
+		orderItemDAO.delete(oiid);
+		
+		return "%success";
+	}
 }

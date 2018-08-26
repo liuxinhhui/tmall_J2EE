@@ -216,49 +216,33 @@
                 </tr>
             </thead>
             <tbody class="productListTableTbody">
+            	<c:forEach items="${ois}" var="oi">
                     <tr class="orderItemTR">
                         <td class="orderItemFirstTD">
-                        	<img width="20px"  src="http://how2j.cn/tmall/img/productSingle_middle/4206.jpg" class="orderItemImg">
+                        	<img width="20px"  src="../img/productSingle_middle/${oi.product.firstProductImage.id}.jpg" class="orderItemImg">
                         </td>
                         <td class="orderItemProductInfo">
-                        	<a class="orderItemProductLink" href="#nowhere">Philips/飞利浦 HR1897/30破壁微榨原汁机 多功能家用果汁榨汁机</a>
-                            <img title="支持信用卡支付" src="http://how2j.cn/tmall/img/site/creditcard.png">
-                            <img title="消费者保障服务,承诺7天退货" src="http://how2j.cn/tmall/img/site/7day.png">
-                            <img title="消费者保障服务,承诺如实描述" src="http://how2j.cn/tmall/img/site/promise.png">
+                        	<a class="orderItemProductLink" href="#nowhere">${oi.product.name}</a>
+                            <img title="支持信用卡支付" src="../img/site/creditcard.png">
+                            <img title="消费者保障服务,承诺7天退货" src="../img/site/7day.png">
+                            <img title="消费者保障服务,承诺如实描述" src="../img/site/promise.png">
                         </td>
-                        <td><span class="orderItemProductPrice">￥3,514.05</span></td>
-                        <td><span class="orderItemProductNumber">2</span></td>
-                        <td><span class="orderItemUnitSum">￥7,028.10</span></td>
+                        <td><span class="orderItemProductPrice"><fmt:formatNumber type="number" value="${oi.product.promotePrice}" /></span></td>
+                        <td><span class="orderItemProductNumber">${oi.number}</span></td>
+                        <td><span class="orderItemUnitSum">￥<fmt:formatNumber type="number" value="${oi.number*oi.product.promotePrice}" minFractionDigits="2"/></span></td>
                         <td class="orderItemLastTD" rowspan="5">
-	                        <label class="orderItemDeliveryLabel">
-	                            <input type="radio" checked="checked" value="">普通配送
-	                        </label>
-	                        <select class="orderItemDeliverySelect">
-	                            <option>快递 免邮费</option>
-	                        </select>
+	                        <label class="orderItemDeliveryLabel"><input type="radio" checked="checked" value="">普通配送</label>
+	                        <select class="orderItemDeliverySelect"><option>快递 免邮费</option></select>
                         </td>
                     </tr>
-                    <tr class="orderItemTR">
-                        <td class="orderItemFirstTD">
-                        	<img width="20px"  src="http://how2j.cn/tmall/img/productSingle_middle/3796.jpg" class="orderItemImg">
-                        </td>
-                        <td class="orderItemProductInfo">
-                        	<a class="orderItemProductLink" href="#nowhere">公众智能扫地机器人家用全自动电动清洁地毯擦拖地一体机吸尘器</a>
-                            <img title="支持信用卡支付" src="http://how2j.cn/tmall/img/site/creditcard.png">
-                            <img title="消费者保障服务,承诺7天退货" src="http://how2j.cn/tmall/img/site/7day.png">
-                            <img title="消费者保障服务,承诺如实描述" src="http://how2j.cn/tmall/img/site/promise.png">
-                        </td>
-                        <td><span class="orderItemProductPrice">￥2,124.15</span></td>
-                        <td><span class="orderItemProductNumber">1</span></td>
-                        <td><span class="orderItemUnitSum">￥2,124.15</span></td>
-                    </tr>
+            	</c:forEach>
             </tbody>
 		</table>
 		<div class="leaveMessage">
 			<div class="pull-left">
                 <span class="leaveMessageText">给卖家留言:</span>
                 <span>
-                    <img src="http://how2j.cn/tmall/img/site/leaveMessage.png" class="leaveMessageImg">
+                    <img src="../img/site/leaveMessage.png" class="leaveMessageImg">
                 </span>
                 <span class="leaveMessageTextareaSpan" style="display: none;">
                     <textarea class="leaveMessageTextarea" name="userMessage"></textarea>
@@ -267,12 +251,12 @@
                     </div>
                 </span>
             </div>
-			<span class="pull-right">店铺合计(含运费):<span class="price">￥9,152,25</span></span>
+			<span class="pull-right">店铺合计(含运费):<span class="price">￥${total}</span></span>
 		</div>
 		<div class="orderSumDiv">
 			<div class="pull-right">
 				<span>实付款：</span>
-				<span class="price">￥9,152,25</span>
+				<span class="price">￥${total}</span>
 			</div>
 		</div>
 		<div class="submitOrderDiv">

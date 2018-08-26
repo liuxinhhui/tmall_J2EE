@@ -233,7 +233,7 @@ public class ReviewDAO {
 	public ArrayList<Review> list(int pid) {
 		ArrayList<Review> beans = new ArrayList<>();
 //		String sql = "select * from review where id>=? and id<=?";
-		String sql = "select * from review where pid = ? order by desc";
+		String sql = "select * from review where pid = ? order by id desc";
 		try (Connection conn = DBUtil.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
 			ps.setInt(1, pid);

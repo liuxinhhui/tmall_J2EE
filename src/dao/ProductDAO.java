@@ -105,7 +105,6 @@ public class ProductDAO {
 				bean.setStock(rs.getInt("stock"));
 				bean.setCreateDate(DateUtil.t2d(rs.getTimestamp("createDate")));
 				bean.setCategory(category);
-				
 			}
 
 		} catch (SQLException e) {
@@ -295,7 +294,7 @@ public class ProductDAO {
 	public void fill(Category c){
 		List<Product> ps = this.list(c.getId());
 		for (Product p : ps) {
-			this.setFirstProductImage(p);
+			setFirstProductImage(p);
 		}
 		c.setProducts(ps);
 	}

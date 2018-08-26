@@ -1,12 +1,15 @@
 package servlet;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.math.RandomUtils;
 import org.springframework.web.util.HtmlUtils;
 
 import bean.Category;
@@ -324,4 +327,61 @@ public class ForeServlet extends BaseBackServlet{
 		
 		return "%success";
 	}
+    
+    //生成订单
+    public String createOrder(HttpServletRequest request, HttpServletResponse response, Page page){
+        User user =(User) request.getSession().getAttribute("user");
+        List<OrderItem> ois= (List<OrderItem>) request.getSession().getAttribute("ois");
+        if(ois.isEmpty())
+            return "@/fore/loginPage.jsp";
+     
+        String address = request.getParameter("address");
+        String post = request.getParameter("post");
+        String receiver = request.getParameter("receiver");
+        String mobile = request.getParameter("mobile");
+        String userMessage = request.getParameter("userMessage");
+        
+        Order order = new Order();
+        String orderCode = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date()) +RandomUtils.nextInt(10000);
+     
+        order.setOrderCode(orderCode);
+        order.setAddress(address);
+        order.setPost(post);
+        order.setReceiver(receiver);
+        order.setMobile(mobile);
+        order.setUserMessage(userMessage);
+        order.setCreateDate(new Date());
+        order.setUser(user);
+        order.setStatus(OrderDAO.waitPay);
+     
+        orderDAO.add(order);
+        
+        float total =0;
+        for (OrderItem oi: ois) {
+            oi.setOrder(order);
+            orderItemDAO.update(oi);
+            total+=oi.getProduct().getPromotePrice()*oi.getNumber();
+        }
+         
+        return "@forepay?oid="+order.getId() +"&total="+total;
+    }
+    
+    public String pay(HttpServletRequest request, HttpServletResponse response, Page page){
+        return "fore/payPage.jsp";
+    }
+    
+    //支付成功
+    public String paysuccess(HttpServletRequest request, HttpServletResponse response, Page page) {
+        int oid = Integer.parseInt(request.getParameter("oid"));
+        
+        Order order = orderDAO.get(oid);
+        order.setStatus(OrderDAO.waitDelivery);
+        order.setPayDate(new Date());
+        new OrderDAO().update(order);
+        
+        request.setAttribute("o", order);
+        
+        return "fore/paySuccessPage.jsp";    
+    }  
+    
 }

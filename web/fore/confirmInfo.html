@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>确认收货 商品信息</title>
+</head>
+
+<style>
+	
+	body,table{
+		font-size: 12px;
+		font-family: Arial;
+	}
+	
+	a{
+		color:#999;
+	}
+	a:hover{
+		color:#c40000;
+		text-decoration: none;
+	}
+
+	div.confirmDiv{
+		max-width: 1013px;
+		margin:10px auto;
+	}
+	
+/* 	订单进度条的和日期 */
+	div.confirmDiv div.info div.status{
+		position:relative;
+		margin:5px auto 80px auto;
+		width: 900px;
+/* 		height: 150px; */
+	}
+	div.confirmDiv div.info div.status div{
+		color: #999999;
+	}
+	div.confirmDiv div.info div.status div.orderDate{
+		position: absolute;
+		top:100px;
+		left:-20px;
+	}
+	div.confirmDiv div.info div.status div.payDate{
+		position: absolute;
+		top:100px;
+		left:190px;
+	}
+	div.confirmDiv div.info div.status div.diliverDate{
+		position: absolute;
+		top:100px;
+		left:400px;
+	}
+	
+/* 	同意付款字样 */
+	div.confirmDiv div.info div.title{
+		color:black;
+		font-size: 16px;
+		font-weight:bold;
+		
+		border-bottom:1px solid #ADC8E6;
+		margin: 10px 10px 0px 10px;
+		padding-bottom: 15px;
+	}
+	
+/* 	订单信息标题 */
+	div.confirmDiv div.info div.orderinfoTitle{
+		margin: 20px 30px;
+		
+		color:black;
+		font-size: 14px;
+		font-weight:normal;
+	}
+	
+/* 	订单信息表格 */
+	div.confirmDiv div.info table.orderinfoTable{
+		width: 100%;
+	}
+	div.confirmDiv div.info table.orderinfoTable tr{
+		border:1px solid #DDDDDD;
+	}
+	div.confirmDiv div.info table.orderinfoTable tr:first-child{
+		background-color:  #E8F2FF;
+		height: 33px;
+	}
+	div.confirmDiv div.info table.orderinfoTable img{
+		width:40px;
+	}
+	
+	div.confirmDiv div.info table.orderinfoTable td{
+		text-align: center;
+		padding: 20px;
+	}
+	div.confirmDiv div.info table.orderinfoTable tr:first-child td{
+		padding: 0px;
+	}
+	div.confirmDiv div.info table.orderinfoTable td a{
+		text-align: left !important;
+	}
+	div.confirmDiv div.info table.orderinfoTable td.itemSumPrice{
+		font-size: 18px;
+		font-weight: bold;
+		color: #666666;
+	}
+	
+/* 	总金额 */
+	div.confirmDiv div.info div.allSumPriceDiv{
+		text-align: right;
+	}
+	div.confirmDiv div.info div.allSumPriceDiv span.allSumPrice{
+		color: #C40000;
+	}
+</style>
+
+<body>
+	
+	<div class="confirmDiv">
+		<div class="info">
+			<div class="status">
+				<img src="../img/site/comformPayFlow.png">
+				<div class="orderDate"><fmt:formatDate value="${o.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/></div>
+				<div class="payDate"><fmt:formatDate value="${o.payDate}" pattern="yyyy-MM-dd HH:mm:ss"/></div>
+				<div class="diliverDate"><fmt:formatDate value="${o.deliveryDate}" pattern="yyyy-MM-dd HH:mm:ss"/></div>
+			</div>
+			
+			<div class="title">我已收到货，同意支付宝付款</div>
+			<div class="orderinfoTitle">订单信息</div>
+			
+			<table class="orderinfoTable">
+				<tbody>
+					<tr>
+						<td colspan="2">宝贝</td>
+						<td>单价</td>
+						<td>数量</td>
+						<td>商品总价</td>
+						<td>运费</td>
+					</tr>
+					<c:forEach items="${o.orderItems}" var="oi">
+						<tr>
+							<td><img src="../img/productSingle_middle/${oi.product.firstProductImage.id}.jpg"></td>
+							<td><a href="#nowhere">${oi.product.name}</a></td>
+							<td>￥<fmt:formatNumber type="number" value="${oi.product.originalPrice}" minFractionDigits="2"/></td>
+							<td>${oi.number}</td>
+							<td class="itemSumPrice">￥<fmt:formatNumber type="number" value="${oi.product.promotePrice * oi.number}" minFractionDigits="2"/></td>
+							<td>快递:0.00</td>
+						</tr>
+					</c:forEach>
+				</tbody>
+			</table>
+			
+			<div class="allSumPriceDiv">实付款：<span class="allSumPrice">￥<fmt:formatNumber type="number" value="${o.total}" minFractionDigits="2"/></span></div>
+			
+		</div>
+	</div>
+	
+</body>
+</html>

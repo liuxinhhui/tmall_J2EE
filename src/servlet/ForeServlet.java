@@ -382,6 +382,51 @@ public class ForeServlet extends BaseBackServlet{
         request.setAttribute("o", order);
         
         return "fore/paySuccessPage.jsp";    
-    }  
+    } 
     
+    //我的订单
+    public String myorder(HttpServletRequest request, HttpServletResponse response, Page page) {
+    	User user =(User) request.getSession().getAttribute("user");
+    	
+        List<Order> os= orderDAO.list(user.getId(),OrderDAO.delete);
+        orderItemDAO.fill(os);
+        
+        for (Order o : os) {
+        	for (OrderItem oi : o.getOrderItems()) {
+				productDAO.setFirstProductImage(oi.getProduct());
+			}
+		}
+        
+        request.setAttribute("os", os);
+        
+    	return "fore/myorderPage.jsp";
+    }
+    
+    //订单页的确认收货按钮 跳转去确认信息
+    public String confirmPay(HttpServletRequest request, HttpServletResponse response, Page page) {
+        int oid = Integer.parseInt(request.getParameter("oid"));
+        
+        Order o = orderDAO.get(oid);
+        orderItemDAO.fill(o);
+        
+        for (OrderItem oi : o.getOrderItems()) {
+			productDAO.setFirstProductImage(oi.getProduct());
+		}
+        
+        request.setAttribute("o", o);
+        
+        return "fore/confirmPage.jsp";       
+    }
+    
+    //确认收货
+    public String orderfinished(HttpServletRequest request, HttpServletResponse response, Page page) {
+        int oid = Integer.parseInt(request.getParameter("oid"));
+        
+        Order o = orderDAO.get(oid);
+        o.setStatus(OrderDAO.waitReview);
+        o.setConfirmDate(new Date());
+        orderDAO.update(o);
+        
+        return "fore/orderFinishedPage.jsp";
+    }
 }

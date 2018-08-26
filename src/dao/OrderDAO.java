@@ -260,4 +260,56 @@ public class OrderDAO {
 //		总数
 //		System.out.println(dao.getTotal());
 	}
+	
+	//非CRUD
+	
+	// 范围查找 某个用户除了某种状态的所有订单 start<=id<=end
+	public ArrayList<Order> list(int uid, String excludedStatus, int start, int count) {
+		ArrayList<Order> beans = new ArrayList<>();
+		String sql = "select * from order_ where uid = ? and status != ? order by id desc limit ?,?";
+		try (Connection conn = DBUtil.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+			ps.setInt(1, uid);
+			ps.setString(2, excludedStatus);
+			ps.setInt(3, start);
+			ps.setInt(4, count);
+			ResultSet rs = ps.executeQuery();
+
+			while (rs.next()) {
+				UserDAO userDAO = new UserDAO();
+				User user = userDAO.get(rs.getInt("uid"));
+				
+				Order bean = new Order();
+				bean.setId(rs.getInt("id"));
+				bean.setOrderCode(rs.getString("orderCode"));
+				bean.setAddress(rs.getString("address"));
+				bean.setPost(rs.getString("post"));
+				bean.setReceiver(rs.getString("receiver"));
+				bean.setMobile(rs.getString("mobile"));
+				bean.setUserMessage(rs.getString("userMessage"));
+				bean.setCreateDate(DateUtil.t2d(rs.getTimestamp("createDate")));
+				bean.setPayDate(DateUtil.t2d(rs.getTimestamp("payDate")));
+				bean.setDeliveryDate(DateUtil.t2d(rs.getTimestamp("deliveryDate")));
+				bean.setConfirmDate(DateUtil.t2d(rs.getTimestamp("confirmDate")));
+				bean.setStatus(rs.getString("status"));
+				bean.setUser(user);
+				
+				beans.add(bean);
+				
+				System.out.println(bean.getId());
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return beans;
+	}
+
+	// 查找所有
+	public ArrayList<Order> list(int uid, String excludedStatus) {
+		return list(uid, excludedStatus, 0, Short.MAX_VALUE);
+	}
+	
 }

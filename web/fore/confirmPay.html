@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>确认收货页面 确认支付</title>>
+</head>
+
+<style>
+/* 	表格 */
+	div.confirmDiv table.address{/*这个上边框要认真理解，如果用width:100%+margin就会错 所以设置成display自适应宽度*/
+		display:block;
+		border-top:1px solid #DDDDDD;
+		margin: 40px;
+	}
+	div.confirmDiv table.address td{
+		padding:8px;
+		color:black;
+		font-size:14px;
+	}
+	div.confirmDiv table.address span.confirmPayOrderDetailWangWangGif{
+	    display: inline-block;
+	    width: 67px; 
+	    height: 22px;
+	    background-image:url(http://how2j.cn/tmall/img/site/wangwang.gif);
+	    background-repeat: no-repeat;
+	    background-color: transparent;
+	    position: relative;
+	    left: 2px;
+	}
+	
+/* 	确认支付div */
+	div.confirmDiv div.confirmPayDiv{
+		border:1px solid #F58B0F;
+		margin:20px;
+	}
+	div.confirmDiv div.confirmPayDiv div.confirmPayText{
+		margin: 20px 80px;
+		font-size: 18px;
+		color: red;
+		font-weight: bold;
+	}
+	div.confirmDiv div.confirmPayDiv button.confirmPayButton{
+		margin: 20px 80px;
+		width:67px;
+		height: 30px;
+		border: 1px solid #E67C00;
+		background-color: #F4A21D;
+		border-radius: 4px;
+		color: white;
+		font-size:12px;
+	}
+	div.confirmDiv div.confirmPayDiv button.confirmPayButton:hover{
+		background-color: #F6AE30;
+	}
+</style>
+
+<body>
+	<div class="confirmDiv">
+		<table class="address">
+			<tbody>
+				<tr>
+					<td>订单编号：</td>
+					<td>${o.orderCode}<img src="../img/site/confirmOrderTmall.png"></td>
+				</tr>
+				<tr>
+					<td>卖家昵称：</td>
+					<td>天猫商铺<span class="confirmPayOrderDetailWangWangGif"></span></td>
+				</tr>
+				<tr>
+					<td>收货信息：</td>
+					<td>${o.address}，${o.receiver}， ${o.mobile}，${o.post}</td>
+				</tr>
+				<tr>
+					<td>成交时间：</td>
+					<td><fmt:formatDate value="${o.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+				</tr>
+			</tbody>
+		</table>
+		
+		<div class="confirmPayDiv">
+			<div class="confirmPayText">请收到货后，再确认收货！否则您可能钱货两空！</div>
+			<a href="/foreorderfinished?oid=${o.id}"><button class="confirmPayButton">确认支付</button></a>
+		</div>
+	</div>
+	
+</body>
+</html>

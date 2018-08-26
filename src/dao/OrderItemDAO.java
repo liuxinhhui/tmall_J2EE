@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 import bean.Order;
 import bean.OrderItem;
@@ -278,7 +279,7 @@ public class OrderItemDAO {
         o.setTotalNumber(totalNumber); //设置总数量
     }
 	
-	public void fill(ArrayList<Order> os) {
+	public void fill(List<Order> os) {
         for (Order o : os) {
         	fill(o);
         }

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>我的订单 订单列表</title>
+</head>
+
+<style>
+	a{
+		color:#999;
+	}
+	a:hover{
+		text-decoration:none;
+		color: #C40000;
+	}
+	
+/* 	每条订单是一个表格 */
+	table.orderListItemTable{
+		width: 100%;
+		margin: 20px 0px;
+		border: 2px solid #ECECEC;
+		font-size:12px;
+	}
+	table.orderListItemTable:hover{
+		border: 2px solid #aaa !important;
+	}
+	table.orderListItemTable td{
+		padding: 8px 10px;
+	}
+/* 	订单标题行 */
+	tr.orderListItemFirstTR{
+		background-color: #F1F1F1;
+	}
+	div.orderItemWangWangGif{
+	    display: inline-block;
+	    width: 67px;
+	    height: 22px;
+	    
+	    background-image:url(http://how2j.cn/tmall/img/site/wangwang.gif);
+	    background-repeat: no-repeat;
+	    background-color: transparent;
+	    background-attachment: scroll;
+	    background-position: -0px -0px;
+	    
+	    position: relative;
+	    top: 0px;
+	    left: 2px;
+	}
+	td.orderItemDeleteTD{	
+		text-align: right;
+	}
+	span.orderListItemDelete{
+		display: inline-block;
+		margin: 0px 10px;
+		color: #999999;
+		font-size: 16px;
+	}
+/* 	订单第二行 边框*/
+	td.orderItemOrderInfoPartTD{
+		border: solid 1px #ECECEC;
+	}
+/* 	第二列 */
+	div.orderListItemProductLinkOutDiv{
+		position: relative;
+		height: 80px;
+	}
+	div.orderListItemProductLinkInnerDiv{
+		position: absolute;
+		bottom: 0px;
+	}
+/* 	单价 */
+	div.orderListItemProductOriginalPrice{
+		color: #999999;
+		font-size: 14px;
+	}
+	div.orderListItemProductPrice{
+		color: #3C3C3C;
+		font-size: 14px;
+	}
+/* 	数量 */
+	td.orderListItemNumberTD{
+		text-align: center;
+	}
+	span.orderListItemNumber{
+		color: #3C3C3C;
+	}
+/* 	合计金额 运费 */
+	td.orderListItemProductRealPriceTD{
+		text-align: center;
+	}
+	div.orderListItemProductRealPrice{
+		color: #3C3C3C;
+		font-size: 14px;
+		font-weight: bold;
+	}
+	div.orderListItemPriceWithTransport{
+		color: #6C6C6C;
+		font-size: 12px;
+	}
+/* 	最后的按钮 */
+	td.orderListItemButtonTD{
+		text-align: center;
+	}
+/* 	评价按钮 */
+	button.orderListItemReview{
+		border: 1px solid #DCDCDC;
+		border-radius: 2px;
+		padding: 6px 12px;
+
+		background-color: #fff;
+
+		color: #3C3C3C;
+		font-size: 12px;
+		font-weight: bold;
+	}
+	button.orderListItemReview:hover{
+		border-color: #C40000;
+		color: #C40000;
+	}
+/* 	确认收货按钮 */
+	button.orderListItemConfirm{
+		border-width: 0px;
+		border-radius: 2px;
+		padding: 6px 12px;
+
+		background-color: #66B6FF;
+
+		color: white;
+		font-size: 12px;
+		font-weight: bold;
+	}
+	button.orderListItemConfirm:hover{
+		background-color: #118ADB;
+	}
+</style>
+
+<body>
+	<div class="boughtDiv">
+		<div class="orderListItem">
+			<c:forEach items="${os}" var="o">
+				<table class="orderListItemTable" oid="${o.id}" orderstatus="${o.status}" >
+					<tbody>
+						<tr class="orderListItemFirstTR">
+							<td colspan="2">
+								<b><fmt:formatDate value="${o.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/></b>
+								<span>订单号： ${o.orderCode}</span>
+							</td>
+							<td colspan="2">
+								<img width="13" src="../img/site/orderItemTmall.png">天猫商场
+							</td>
+							<td colspan="1">
+								<a href="#nowhere" class="wangwanglink"><div class="orderItemWangWangGif"></div></a>
+							</td>
+							<td class="orderItemDeleteTD">
+								<a href="#nowhere" oid="${o.id}" class="deleteOrderLink">
+		                            <span class="orderListItemDelete glyphicon glyphicon-trash"></span>
+		                        </a>
+							</td>
+						</tr>
+						
+						<c:forEach items="${o.orderItems}" var="oi" varStatus="st">
+							<tr class="orderItemProductInfoPartTR">
+								<td class="orderItemProductInfoPartTD">
+									<img width="80" height="80" src="../img/productSingle_middle/${oi.product.firstProductImage.id}.jpg">
+								</td>
+								<td class="orderItemProductInfoPartTD">
+		                            <div class="orderListItemProductLinkOutDiv">
+		                                <a href="#nowhere">${oi.product.name}</a>
+		                                <div class="orderListItemProductLinkInnerDiv">
+			                                <img title="支持信用卡支付" src="../img/site/creditcard.png">
+			                                <img title="消费者保障服务,承诺7天退货" src="../img/site/7day.png">
+			                                <img title="消费者保障服务,承诺如实描述" src="../img/site/promise.png">                    
+		                                </div>
+		                            </div>
+		                        </td>
+		                        <td width="100px" class="orderItemProductInfoPartTD">
+		                            <div class="orderListItemProductOriginalPrice">￥<fmt:formatNumber  minFractionDigits="2"  maxFractionDigits="2" type="number" value="${oi.product.originalPrice}"/></div>
+		                            <div class="orderListItemProductPrice">￥<fmt:formatNumber  minFractionDigits="2"  maxFractionDigits="2" type="number" value="${oi.product.promotePrice}"/></div>
+		                        </td>
+		                        
+		                        <c:if test="${st.count==1}">
+			                        <td width="100px" valign="top" class="orderListItemNumberTD orderItemOrderInfoPartTD" rowspan="${fn:length(o.orderItems)}">
+			                            <span class="orderListItemNumber">${o.totalNumber}</span>
+			                        </td>
+			                        <td width="120px" valign="top" class="orderListItemProductRealPriceTD orderItemOrderInfoPartTD" rowspan="${fn:length(o.orderItems)}">
+			                            <div class="orderListItemProductRealPrice">￥<fmt:formatNumber  minFractionDigits="2"  maxFractionDigits="2" type="number" value="${o.total}"/></div>
+			                            <div class="orderListItemPriceWithTransport">(含运费：￥0.00)</div>
+			                        </td>
+			                        <td width="100px" valign="top" class="orderListItemButtonTD orderItemOrderInfoPartTD" rowspan="${fn:length(o.orderItems)}">
+			                        	<c:if test="${o.status=='waitConfirm' }">
+		                                    <a href="/foreconfirmPay?oid=${o.id}">
+		                                        <button class="orderListItemConfirm">确认收货</button>
+		                                    </a>
+		                                </c:if>
+		                                <c:if test="${o.status=='waitPay' }">
+		                                    <a href="/fore/payPage.jsp?oid=${o.id}&total=${o.total}">
+		                                        <button class="orderListItemConfirm">付款</button>
+		                                    </a>                             
+		                                </c:if>
+		                                <c:if test="${o.status=='waitDelivery' }">
+		                                    <span>待发货</span>
+		                                </c:if>
+			                            <c:if test="${o.status=='waitReview' }">
+		                                    <a href="/forereview?oid=${o.id}">
+		                                        <button  class="orderListItemReview">评价</button>
+		                                    </a>
+		                                </c:if>
+			                        </td>
+                                </c:if>
+							</tr>
+						</c:forEach>
+						
+					</tbody>
+				</table>
+			</c:forEach>
+		
+		</div><!-- orderListItem -->
+	</div>
+</body>
+</html>

@@ -216,7 +216,7 @@
                 </tr>
             </thead>
             <tbody class="productListTableTbody">
-            	<c:forEach items="${ois}" var="oi">
+            	<c:forEach items="${ois}" var="oi" varStatus="st">
                     <tr class="orderItemTR">
                         <td class="orderItemFirstTD">
                         	<img width="20px"  src="../img/productSingle_middle/${oi.product.firstProductImage.id}.jpg" class="orderItemImg">
@@ -230,10 +230,12 @@
                         <td><span class="orderItemProductPrice"><fmt:formatNumber type="number" value="${oi.product.promotePrice}" /></span></td>
                         <td><span class="orderItemProductNumber">${oi.number}</span></td>
                         <td><span class="orderItemUnitSum">￥<fmt:formatNumber type="number" value="${oi.number*oi.product.promotePrice}" minFractionDigits="2"/></span></td>
-                        <td class="orderItemLastTD" rowspan="5">
-	                        <label class="orderItemDeliveryLabel"><input type="radio" checked="checked" value="">普通配送</label>
-	                        <select class="orderItemDeliverySelect"><option>快递 免邮费</option></select>
-                        </td>
+                        <c:if test="${st.count==1}">
+	                        <td class="orderItemLastTD" rowspan="${fn:length(ois)}">
+		                        <label class="orderItemDeliveryLabel"><input type="radio" checked="checked" value="">普通配送</label>
+		                        <select class="orderItemDeliverySelect"><option>快递 免邮费</option></select>
+	                        </td>
+                        </c:if>
                     </tr>
             	</c:forEach>
             </tbody>

@@ -186,7 +186,7 @@
 	<div class="productReviewDiv">
 		<div class="productReviewTopPart">
 	        <a class="productReviewTopPartSelectedLink" href="#nowhere">商品详情</a>
-	        <a class="selected" href="#nowhere">累计评价 <span class="productReviewTopReviewLinkNumber">19</span></a>
+	        <a class="selected" href="#nowhere">累计评价 <span class="productReviewTopReviewLinkNumber">${p.reviewCount}</span></a>
 	    </div>
 	    
 	    <div class="productReviewContentPart">
@@ -196,7 +196,7 @@
 		                <div class="productReviewItemContent">${review.content}</div>
 		                <div class="productReviewItemDate">${review.createDate}</div>
 		            </div>
-		            <div class="productReviewItemUserInfo">${review.name}
+		            <div class="productReviewItemUserInfo">${review.user.name}
 		            	<span class="userInfoGrayPart">（匿名）</span>
 		            </div>
 		            <div style="clear:both"></div>

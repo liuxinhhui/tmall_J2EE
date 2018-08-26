@@ -295,8 +295,6 @@ public class OrderDAO {
 				bean.setUser(user);
 				
 				beans.add(bean);
-				
-				System.out.println(bean.getId());
 			}
 
 		} catch (SQLException e) {

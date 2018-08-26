@@ -134,6 +134,43 @@
 	}
 </style>
 
+<script>
+	
+	var deleteOrder = false;
+	var deleteOrderid = 0;
+
+	$(function(){
+		$("a.deleteOrderLink").click(function(){
+	        deleteOrderid = $(this).attr("oid");
+	        deleteOrder = false;
+	        $("#deleteConfirmModal").modal("show");
+	    });
+	     
+	    $("button.deleteConfirmButton").click(function(){
+	        deleteOrder = true;
+	        $("#deleteConfirmModal").modal('hide');
+	    });
+	     
+	    $('#deleteConfirmModal').on('hidden.bs.modal', function (e) {
+	        if(deleteOrder){
+	            var page="foredeleteOrder";
+	            $.post(
+                    page,
+                    {"oid":deleteOrderid},
+                    function(result){
+                        if("success"==result){
+                            $("table.orderListItemTable[oid="+deleteOrderid+"]").remove();
+                        }
+                        else{
+                            location.href="/fore/loginPage.jsp";
+                        }
+                    }
+	            );
+	        }
+	    })     
+	})
+</script>
+
 <body>
 	<div class="boughtDiv">
 		<div class="orderListItem">
@@ -204,6 +241,9 @@
 		                                    <a href="/forereview?oid=${o.id}">
 		                                        <button  class="orderListItemReview">评价</button>
 		                                    </a>
+		                                </c:if>
+		                                <c:if test="${o.status=='finish' }">
+		                                    <span>已完成</span>
 		                                </c:if>
 			                        </td>
                                 </c:if>

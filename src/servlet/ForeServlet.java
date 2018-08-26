@@ -429,4 +429,56 @@ public class ForeServlet extends BaseBackServlet{
         
         return "fore/orderFinishedPage.jsp";
     }
+    
+    //跳转到评价订单
+	public String review(HttpServletRequest request, HttpServletResponse response, Page page) {
+		int oid = Integer.parseInt(request.getParameter("oid"));
+		
+		Order o = orderDAO.get(oid);
+	    orderItemDAO.fill(o);
+	    Product p = o.getOrderItems().get(0).getProduct();
+	    productDAO.setFirstProductImage(p);
+	    List<Review> reviews = reviewDAO.list(p.getId());
+	    productDAO.setSaleAndReviewNumber(p);
+	    
+	    request.setAttribute("p", p);
+	    request.setAttribute("o", o);
+	    request.setAttribute("reviews", reviews);
+		
+		return "fore/reviewPage.jsp";
+	}
+	
+	//提交评价
+	public String doreview(HttpServletRequest request, HttpServletResponse response, Page page) {
+		User user =(User) request.getSession().getAttribute("user");
+		int oid = Integer.parseInt(request.getParameter("oid"));
+		int pid = Integer.parseInt(request.getParameter("pid"));
+
+		Order o = orderDAO.get(oid);
+	    o.setStatus(OrderDAO.finish);
+	    orderDAO.update(o);
+	    
+	    Product p = productDAO.get(pid);
+	    String content = request.getParameter("content");
+	    content = HtmlUtils.htmlEscape(content);
+	    Review review = new Review();
+	    review.setContent(content);
+	    review.setProduct(p);
+	    review.setCreateDate(new Date());
+	    review.setUser(user);
+	    reviewDAO.add(review);
+	     
+	    return "@forereview?oid="+oid+"&showonly=true";   
+	}
+	
+	//删除订单
+	public String deleteOrder(HttpServletRequest request, HttpServletResponse response, Page page){
+	    int oid = Integer.parseInt(request.getParameter("oid"));
+	    
+	    Order o = orderDAO.get(oid);
+	    o.setStatus(OrderDAO.delete);
+	    orderDAO.update(o);
+	    
+	    return "%success";     
+	}
 }

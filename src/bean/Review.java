@@ -10,8 +10,8 @@ public class Review {
 	private String content;
 	private Date createDate;
 	
-	private Product product;
 	private User user;
+	private Product product;
 	public int getId() {
 		return id;
 	}

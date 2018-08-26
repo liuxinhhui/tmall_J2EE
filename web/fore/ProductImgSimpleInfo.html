@@ -59,7 +59,8 @@
 	                page,
 	                function(result){
 	                    if("success"==result){
-	                 		
+	                    	var num = $(".productNumberSetting").val();
+	                        location.href= $(".buyLink").attr("href")+"&num="+num;	//把购买数量添加到href属性中
 	                    }
 	                    else{
 	                        $("#loginModal").modal('show');                    

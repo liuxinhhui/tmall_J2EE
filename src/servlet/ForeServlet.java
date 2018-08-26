@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.util.HtmlUtils;
 
 import bean.Category;
+import bean.Order;
+import bean.OrderItem;
 import bean.Product;
 import bean.ProductImage;
 import bean.PropertyValue;
@@ -193,4 +195,35 @@ public class ForeServlet extends BaseBackServlet{
         return "%success"; 
     }
     
+    //立即购买 直接操作数据库中的 订单项 这时的订单项都是订单id=-1 这是订单项还没有生成订单的标志
+    public String buyone(HttpServletRequest request, HttpServletResponse response, Page page) {
+    	int pid = Integer.parseInt(request.getParameter("pid"));
+        int num = Integer.parseInt(request.getParameter("num"));
+        User user =(User) request.getSession().getAttribute("user");
+        
+        Product p = productDAO.get(pid);
+        int oiid = 0;
+        boolean found = false;
+        //考虑到如果没有立即付款 那么依然需要到购物车中找到它  因此需要放在购物车中
+        List<OrderItem> ois = orderItemDAO.listByUser(user.getId());
+        for (OrderItem oi : ois) {
+            if(oi.getProduct().getId()==p.getId()){
+                oi.setNumber(oi.getNumber()+num);
+                orderItemDAO.update(oi);
+                found = true;
+                oiid = oi.getId();
+                break;
+            }
+        }      
+        if(!found){
+            OrderItem oi = new OrderItem();
+            oi.setUser(user);
+            oi.setNumber(num);
+            oi.setProduct(p);
+            orderItemDAO.add(oi);
+            oiid = oi.getId();
+        }
+        	
+    	return "@fore/settleAccountPage.jsp?oiid=" + oiid;
+    }
 }

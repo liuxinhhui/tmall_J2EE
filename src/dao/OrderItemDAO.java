@@ -29,7 +29,10 @@ public class OrderItemDAO {
 
 			ps.setInt(1, bean.getNumber());
 			ps.setInt(2, bean.getProduct().getId());
-			ps.setInt(3, bean.getOrder().getId());
+			if( null == bean.getOrder())
+				ps.setInt(3, -1);
+			else
+				ps.setInt(3, bean.getOrder().getId());
 			ps.setInt(4, bean.getUser().getId());
 			ps.execute();
 
@@ -52,7 +55,10 @@ public class OrderItemDAO {
 
 			ps.setInt(1, bean.getNumber());
 			ps.setInt(2, bean.getProduct().getId());
-			ps.setInt(3, bean.getOrder().getId());
+			if(null == bean.getOrder())
+				ps.setInt(3, -1);
+			else
+				ps.setInt(3, bean.getOrder().getId());
 			ps.setInt(4, bean.getUser().getId());
 			ps.setInt(5, bean.getId());
 			ps.execute();
@@ -99,7 +105,6 @@ public class OrderItemDAO {
 				bean.setProduct(product);
 				bean.setOrder(order);
 				bean.setUser(user);
-				bean.setUser(user);
 			}
 
 		} catch (SQLException e) {
@@ -133,7 +138,6 @@ public class OrderItemDAO {
 				bean.setNumber(rs.getInt("number"));
 				bean.setProduct(product);
 				bean.setOrder(order);
-				bean.setUser(user);
 				bean.setUser(user);
 				
 				beans.add(bean);
@@ -244,7 +248,6 @@ public class OrderItemDAO {
 				bean.setProduct(product);
 				bean.setOrder(order);
 				bean.setUser(user);
-				bean.setUser(user);
 				
 				beans.add(bean);
 			}
@@ -298,5 +301,46 @@ public class OrderItemDAO {
            }
            return total;
    }
+	
+	//查询一个用户的订单项
+	public ArrayList<OrderItem> listByUser(int uid, int start, int count) {
+		ArrayList<OrderItem> beans = new ArrayList<>();
+		String sql = "select * from orderItem where uid = ? and oid=-1 order by id desc limit ?,?";
+		try (Connection conn = DBUtil.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+			ps.setInt(1, uid);
+			ps.setInt(2, start);
+	        ps.setInt(3, count);
+			ResultSet rs = ps.executeQuery();
+
+			while (rs.next()) {
+				UserDAO userDAO = new UserDAO();
+				User user = userDAO.get(rs.getInt("uid"));
+				ProductDAO productDAO = new ProductDAO();
+				Product product = productDAO.get(rs.getInt("pid"));
+				OrderDAO orderDAO = new OrderDAO();
+				Order order = orderDAO.get(rs.getInt("oid"));
+				
+				OrderItem bean = new OrderItem();
+				bean.setId(rs.getInt("id"));
+				bean.setNumber(rs.getInt("number"));
+				bean.setProduct(product);
+				bean.setOrder(order);
+				bean.setUser(user);
+				
+				beans.add(bean);
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return beans;
+	}
+	
+	 public ArrayList<OrderItem> listByUser(int uid) {
+	        return listByUser(uid, 0, Short.MAX_VALUE);
+	    }
 	
 }

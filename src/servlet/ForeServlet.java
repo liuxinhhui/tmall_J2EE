@@ -234,6 +234,7 @@ public class ForeServlet extends BaseBackServlet{
     //根据订单项列表 显示结算页面
     public String buy(HttpServletRequest request, HttpServletResponse response, Page page) {
     	String[] oiids=request.getParameterValues("oiid");
+    	User user =(User) request.getSession().getAttribute("user");
     	
     	List<OrderItem> ois = new ArrayList<>();
         float total = 0;
@@ -241,6 +242,10 @@ public class ForeServlet extends BaseBackServlet{
         for (String strid : oiids) {
             int oiid = Integer.parseInt(strid);
             OrderItem oi= orderItemDAO.get(oiid);
+            if(user.getId() != oi.getUser().getId()){
+            	response.setContentType("text/html; charset=UTF-8");
+            	return "%您试图访问他人的订单 请停止这种行为";
+            }
             productDAO.setFirstProductImage(oi.getProduct());
             total +=oi.getProduct().getPromotePrice()*oi.getNumber();
             ois.add(oi);

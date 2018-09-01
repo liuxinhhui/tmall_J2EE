@@ -120,7 +120,7 @@
 							<img width="100px" src="img/productSingle_middle/${p.firstProductImage.id}.jpg" class="productImage">
 						</a>
 						<span class="productPrice">¥<fmt:formatNumber type="number" value="${p.promotePrice}" minFractionDigits="2"/></span>
-						<a href="foreproduct?pid=${p.id}" class="productLink"${fn:substring(p.name, 0, 50)}</a>
+						<a href="foreproduct?pid=${p.id}" class="productLink">${fn:substring(p.name, 0, 50)}</a>
 						<a href="foreproduct?pid=${p.id}" class="tmallLink">天猫专卖</a>
 						<div class="productInfo">
 							<span class="monthDeal">月成交<span class="productDealNumber">${p.saleCount}笔</span></span>

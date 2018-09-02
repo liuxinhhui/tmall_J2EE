@@ -186,13 +186,13 @@ public class OrderItemDAO {
 
 //		Ôö¼Ó
 		User u = udao.get(1);
-		Order o = odao.get(2);
-		Product p = pdao.get(10);
+		Order o = odao.get(6);
+		Product p = pdao.get(90);
 		
 		OrderItem bean = new OrderItem();
 		bean.setNumber(3);
 		bean.setUser(u);
-		bean.setOrder(o);
+		bean.setOrder(null);
 		bean.setProduct(p);
 		dao.add(bean);
 

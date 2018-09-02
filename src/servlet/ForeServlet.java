@@ -224,6 +224,7 @@ public class ForeServlet extends BaseBackServlet{
             oi.setUser(user);
             oi.setNumber(num);
             oi.setProduct(p);
+            oi.setOrder(null);
             orderItemDAO.add(oi);
             oiid = oi.getId();
         }

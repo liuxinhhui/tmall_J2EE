@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLType;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,16 +26,22 @@ public class OrderItemDAO {
 	 * 插入时，bean里面没有id值。只有插入数据库之后，数据库自动生成之后，再获取id值赋值到bean上
 	 */
 	public void add(OrderItem bean){
-		String sql = "insert into orderItem values(null,?,?,?,?)";
+		String sql;
+		if(null == bean.getOrder())
+			sql = "insert into orderItem values(null,?,?,null,?)";
+		else
+			sql = "insert into orderItem values(null,?,?,?,?)";
 		try(Connection conn = DBUtil.getConnection(); PreparedStatement ps = conn.prepareStatement(sql);) {
 
 			ps.setInt(1, bean.getNumber());
 			ps.setInt(2, bean.getProduct().getId());
-			if( null == bean.getOrder())
-				ps.setInt(3, -1);
-			else
+			if( null == bean.getOrder()){
+				ps.setInt(3, bean.getUser().getId());
+			}
+			else{
 				ps.setInt(3, bean.getOrder().getId());
-			ps.setInt(4, bean.getUser().getId());
+				ps.setInt(4, bean.getUser().getId());
+			}
 			ps.execute();
 
 			ResultSet rs = ps.getGeneratedKeys();
@@ -56,12 +63,16 @@ public class OrderItemDAO {
 
 			ps.setInt(1, bean.getNumber());
 			ps.setInt(2, bean.getProduct().getId());
-			if(null == bean.getOrder())
-				ps.setInt(3, -1);
-			else
+			if(null == bean.getOrder()){
+				ps.setNull(3 , java.sql.Types.SMALLINT);
+				ps.setInt(4, bean.getUser().getId());
+				ps.setInt(5, bean.getId());
+			}
+			else{
 				ps.setInt(3, bean.getOrder().getId());
-			ps.setInt(4, bean.getUser().getId());
-			ps.setInt(5, bean.getId());
+				ps.setInt(4, bean.getUser().getId());
+				ps.setInt(5, bean.getId());
+			}
 			ps.execute();
 
 		} catch (SQLException e) {
@@ -188,32 +199,32 @@ public class OrderItemDAO {
 		User u = udao.get(1);
 		Order o = odao.get(6);
 		Product p = pdao.get(90);
-		
-		OrderItem bean = new OrderItem();
-		bean.setNumber(3);
+//		
+//		OrderItem bean = new OrderItem();
+//		bean.setNumber(3);
+//		bean.setUser(u);
+//		bean.setOrder(null);
+//		bean.setProduct(p);
+//		dao.add(bean);
+
+//		查询
+//		ArrayList<OrderItem> beans = dao.listByUser(1);
+//		Iterator<OrderItem> itr = beans.iterator();
+//		while (itr.hasNext()) {
+//			OrderItem i = itr.next();
+//			System.out.println(i.getNumber());
+//			System.out.println(i.getProduct().getId());
+//			System.out.println(i.getOrder().getId());
+//			System.out.println(i.getUser().getId());
+//		}
+
+//		修改
+		OrderItem bean = dao.get(58);
+		bean.setNumber(10);
 		bean.setUser(u);
 		bean.setOrder(null);
 		bean.setProduct(p);
-		dao.add(bean);
-
-//		查询
-		ArrayList<OrderItem> beans = dao.list();
-		Iterator<OrderItem> itr = beans.iterator();
-		while (itr.hasNext()) {
-			OrderItem i = itr.next();
-			System.out.println(i.getNumber());
-			System.out.println(i.getProduct().getId());
-			System.out.println(i.getOrder().getId());
-			System.out.println(i.getUser().getId());
-		}
-
-//		修改
-//		OrderItem bean = dao.get(1);
-//		bean.setNumber(10);
-//		bean.setUser(u);
-//		bean.setOrder(o);
-//		bean.setProduct(p);
-//		dao.update(bean);
+		dao.update(bean);
 
 //		删除
 //		dao.delete(bean.getId());
@@ -306,27 +317,28 @@ public class OrderItemDAO {
 	//查询一个用户的订单项
 	public ArrayList<OrderItem> listByUser(int uid, int start, int count) {
 		ArrayList<OrderItem> beans = new ArrayList<>();
-		String sql = "select * from orderItem where uid = ? and oid=-1 order by id desc limit ?,?";
+		String sql = "select * from orderItem where uid = ? and oid is NULL order by id desc limit ?,?";
 		try (Connection conn = DBUtil.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
 			ps.setInt(1, uid);
 			ps.setInt(2, start);
 	        ps.setInt(3, count);
-			ResultSet rs = ps.executeQuery();
 
+	        ResultSet rs = ps.executeQuery();
+			
 			while (rs.next()) {
 				UserDAO userDAO = new UserDAO();
 				User user = userDAO.get(rs.getInt("uid"));
 				ProductDAO productDAO = new ProductDAO();
 				Product product = productDAO.get(rs.getInt("pid"));
-				OrderDAO orderDAO = new OrderDAO();
-				Order order = orderDAO.get(rs.getInt("oid"));
+//				OrderDAO orderDAO = new OrderDAO();
+//				Order order = orderDAO.get(rs.getInt("oid"));
 				
 				OrderItem bean = new OrderItem();
 				bean.setId(rs.getInt("id"));
 				bean.setNumber(rs.getInt("number"));
 				bean.setProduct(product);
-				bean.setOrder(order);
+				bean.setOrder(null);
 				bean.setUser(user);
 				
 				beans.add(bean);
